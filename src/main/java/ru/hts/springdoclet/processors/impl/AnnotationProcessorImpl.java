@@ -1,7 +1,6 @@
 package ru.hts.springdoclet.processors.impl;
 
 import com.sun.javadoc.AnnotationDesc;
-import org.apache.commons.lang3.ClassUtils;
 import ru.hts.springdoclet.annotation.AnnotationHandler;
 import ru.hts.springdoclet.processors.AnnotationProcessor;
 import ru.hts.springdoclet.render.RenderContext;
@@ -9,6 +8,8 @@ import ru.hts.springdoclet.render.RenderContext;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static ru.hts.springdoclet.ReflectionUtils.getRequiredClass;
 
 
 /**
@@ -23,12 +24,7 @@ public class AnnotationProcessorImpl implements AnnotationProcessor {
         RenderContext result = new RenderContext();
 
         for (AnnotationDesc annotationDoc : annotations) {
-            Class annotationType;
-            try {
-                annotationType = ClassUtils.getClass(annotationDoc.annotationType().qualifiedTypeName());
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
+            Class annotationType = getRequiredClass(annotationDoc.annotationType().qualifiedTypeName());
 
             AnnotationHandler handler = handlerMap.get(annotationType);
             if (handler != null) {

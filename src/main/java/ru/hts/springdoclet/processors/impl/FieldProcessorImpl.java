@@ -3,7 +3,6 @@ package ru.hts.springdoclet.processors.impl;
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.FieldDoc;
 import com.sun.javadoc.Type;
-import org.apache.commons.lang3.ClassUtils;
 import ru.hts.springdoclet.JavadocUtils;
 import ru.hts.springdoclet.processors.FieldProcessor;
 import ru.hts.springdoclet.render.RenderContext;
@@ -11,6 +10,8 @@ import ru.hts.springdoclet.render.RenderContext;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import static ru.hts.springdoclet.ReflectionUtils.getRequiredClass;
 
 /**
  * Processes class fields
@@ -29,12 +30,7 @@ public class FieldProcessorImpl implements FieldProcessor {
             field.put("type", JavadocUtils.formatTypeName(fieldDoc.type()));
             field.put("description", fieldDoc.commentText());
 
-            Class type;
-            try {
-                type = ClassUtils.getClass(fieldDoc.type().qualifiedTypeName());
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
+            Class type = getRequiredClass(fieldDoc.type().qualifiedTypeName());
 
             if (Collection.class.isAssignableFrom(type)) {
                 Type[] collectionType = fieldDoc.type().asParameterizedType().typeArguments();

@@ -43,7 +43,13 @@
                 </table>
             [/#if]
 
-            [#if method['return']?size != 0]
+            [#if method['return']??]
+                <h4>Выход</h4>
+
+                <p>${method['return']}</p>
+            [/#if]
+
+            [#if method['returnFields']?? && (method['returnFields']?size != 0)]
                 <h4>Выход</h4>
                 <table class="return">
                     <tr>
@@ -51,7 +57,7 @@
                         <th>Тип</th>
                         <th>Описание</th>
                     </tr>
-                    [@listparams method['return']/]
+                    [@listparams method['returnFields']/]
                 </table>
             [/#if]
 

@@ -21,6 +21,13 @@
 
     <bean id="returnProcessor" class="ru.hts.springdoclet.processors.impl.ReturnProcessorImpl">
         <property name="fieldProcessor" ref="returnClassFieldProcessor"/>
+        <property name="ignoreTypes">
+            <list>
+                <value>java.lang.String</value>
+                <value>org.springframework.web.servlet.ModelAndView</value>
+                <value>org.springframework.web.servlet.View</value>
+            </list>
+        </property>
     </bean>
 
     <bean id="returnClassFieldProcessor" class="ru.hts.springdoclet.processors.impl.FieldProcessorImpl"/>

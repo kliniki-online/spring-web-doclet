@@ -35,11 +35,15 @@ public class ParameterProcessorImpl implements ParameterProcessor {
         for (Parameter paramDoc : methodDoc.parameters()) {
             RenderContext param = new RenderContext();
 
-            param.put("type", JavadocUtils.formatTypeName(paramDoc.type()));
-
             param.putAll(annotationProcessor.process(paramDoc.annotations()));
 
-            param.put("description", descriptionMap.get(param.get("name")));
+            String name = (String) param.get("name");
+            if (name == null) {
+                continue;
+            }
+
+            param.put("description", descriptionMap.get(name));
+            param.put("type", JavadocUtils.formatTypeName(paramDoc.type()));
 
             result.add(param);
         }
