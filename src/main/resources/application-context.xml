@@ -51,6 +51,7 @@
         <property name="annotationHandlers">
             <list>
                 <bean class="ru.hts.springdoclet.annotation.RequestParamAnnotationHandler"/>
+                <bean class="ru.hts.springdoclet.annotation.PathVariableAnnotationHandler"/>
             </list>
         </property>
     </bean>
