@@ -10,8 +10,8 @@
 <ul>
     [#list methods as method]
         <li>
-            <a href="${method['controllerLink']}#${method['anchor']}">${method['url']} (${method['method']}
-                )</a> &ndash; ${method['description']}
+            <a href="${method['controllerLink']}#${method['anchor']}">
+            ${method['url']} (${method['method']})</a> &ndash; ${method['description']}
         </li>
     [/#list]
 </ul>
