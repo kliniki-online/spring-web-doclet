@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="springDoclet" class="ru.hts.springdoclet.SpringDoclet">
+        <property name="controllerProcessor" ref="controllerProcessor"/>
+        <property name="renderer" ref="renderer"/>
+    </bean>
+
+    <bean id="controllerProcessor" class="ru.hts.springdoclet.processors.impl.ControllerProcessorImpl">
+        <property name="methodProcessor" ref="methodProcessor"/>
+    </bean>
+
+    <bean id="methodProcessor" class="ru.hts.springdoclet.processors.impl.MethodProcessorImpl">
+        <property name="parameterProcessor" ref="parameterProcessor"/>
+        <property name="annotationProcessor" ref="methodAnnotationProcessor"/>
+        <property name="returnProcessor" ref="returnProcessor"/>
+        <property name="throwsProcessor" ref="throwsProcessor"/>
+    </bean>
+
+    <bean id="returnProcessor" class="ru.hts.springdoclet.processors.impl.ReturnProcessorImpl">
+        <property name="fieldProcessor" ref="returnClassFieldProcessor"/>
+    </bean>
+
+    <bean id="returnClassFieldProcessor" class="ru.hts.springdoclet.processors.impl.FieldProcessorImpl"/>
+
+    <bean id="throwsProcessor" class="ru.hts.springdoclet.processors.impl.ThrowsProcessorImpl"/>
+
+    <bean id="methodAnnotationProcessor" class="ru.hts.springdoclet.processors.impl.AnnotationProcessorImpl">
+        <property name="annotationHandlers">
+            <list>
+                <bean class="ru.hts.springdoclet.annotation.RequestMappingAnnotationHandler"/>
+                <bean class="ru.hts.springdoclet.annotation.RolesAllowedAnnotationHandler"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="parameterProcessor" class="ru.hts.springdoclet.processors.impl.ParameterProcessorImpl">
+        <property name="annotationProcessor" ref="parameterAnnotationProcessor"/>
+    </bean>
+
+    <bean id="parameterAnnotationProcessor" class="ru.hts.springdoclet.processors.impl.AnnotationProcessorImpl">
+        <property name="annotationHandlers">
+            <list>
+                <bean class="ru.hts.springdoclet.annotation.RequestParamAnnotationHandler"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="renderer" class="ru.hts.springdoclet.render.FreemarkerJavadocRenderer"/>
+</beans>

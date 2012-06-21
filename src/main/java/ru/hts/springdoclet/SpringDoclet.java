@@ -3,10 +3,10 @@ package ru.hts.springdoclet;
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.LanguageVersion;
 import com.sun.javadoc.RootDoc;
-import ru.hts.springdoclet.annotation.RequestMappingAnnotationHandler;
-import ru.hts.springdoclet.annotation.RequestParamAnnotationHandler;
-import ru.hts.springdoclet.annotation.RolesAllowedAnnotationHandler;
-import ru.hts.springdoclet.processors.*;
+import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
+import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.core.io.ClassPathResource;
+import ru.hts.springdoclet.processors.ControllerProcessor;
 import ru.hts.springdoclet.render.FreemarkerJavadocRenderer;
 import ru.hts.springdoclet.render.RenderContext;
 
@@ -22,12 +22,8 @@ import java.util.TreeMap;
 public class SpringDoclet {
 
     private FreemarkerJavadocRenderer renderer;
-    private ControllerProcessor controllerProcessor;
 
-    public SpringDoclet(ControllerProcessor controllerProcessor, FreemarkerJavadocRenderer renderer) {
-        this.renderer = renderer;
-        this.controllerProcessor = controllerProcessor;
-    }
+    private ControllerProcessor controllerProcessor;
 
     public void configure(String[][] options) {
         for (String[] opt : options) {
@@ -75,21 +71,19 @@ public class SpringDoclet {
     }
 
     public static boolean start(RootDoc root) {
-        FreemarkerJavadocRenderer renderer = new FreemarkerJavadocRenderer();
+        return start(root, null);
+    }
 
-        AnnotationProcessor methodAnnotationProcessor = new AnnotationProcessor();
-        methodAnnotationProcessor.addAnnotationHandler(new RequestMappingAnnotationHandler());
-        methodAnnotationProcessor.addAnnotationHandler(new RolesAllowedAnnotationHandler());
+    public static boolean start(RootDoc root, String customContext) {
+        GenericApplicationContext appContext = new GenericApplicationContext();
+        XmlBeanDefinitionReader beanReader = new XmlBeanDefinitionReader(appContext);
+        beanReader.loadBeanDefinitions(new ClassPathResource("application-context.xml"));
 
-        AnnotationProcessor paramAnnotationProcessor = new AnnotationProcessor();
-        paramAnnotationProcessor.addAnnotationHandler(new RequestParamAnnotationHandler());
-        ParameterProcessor parameterProcessor = new ParameterProcessor(paramAnnotationProcessor);
-        ReturnProcessor returnProcessor = new ReturnProcessor(new FieldProcessor());
+        if (customContext != null) {
+            beanReader.loadBeanDefinitions(new ClassPathResource(customContext));
+        }
 
-        MethodProcessor methodProcessor = new MethodProcessor(parameterProcessor, methodAnnotationProcessor, returnProcessor, new ThrowsProcessor());
-        ControllerProcessor controllerProcessor = new ControllerProcessor(methodProcessor);
-
-        SpringDoclet doclet = new SpringDoclet(controllerProcessor, renderer);
+        SpringDoclet doclet = (SpringDoclet) appContext.getBean("springDoclet");
         doclet.configure(root.options());
         return doclet.process(root);
     }
@@ -99,10 +93,18 @@ public class SpringDoclet {
     }
 
     public static int optionLength(String option) {
-        if ("-d".equals(option) || "-windowtitle".equals(option) || "-stylesheetfile".equals(option) || "-author".equals(option)) {
+        if ("-d".equals(option) || "-windowtitle".equals(option) || "-stylesheetfile".equals(option)) {
             return 2;
         } else {
             return 0;
         }
+    }
+
+    public void setRenderer(FreemarkerJavadocRenderer renderer) {
+        this.renderer = renderer;
+    }
+
+    public void setControllerProcessor(ControllerProcessor controllerProcessor) {
+        this.controllerProcessor = controllerProcessor;
     }
 }

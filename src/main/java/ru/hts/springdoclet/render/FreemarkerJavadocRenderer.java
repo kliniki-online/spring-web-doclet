@@ -5,6 +5,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -17,6 +18,7 @@ import java.util.Map;
  * Renders collected information about web API using FreeMarker templates
  * @author Ivan Sungurov
  */
+@Component
 public class FreemarkerJavadocRenderer implements JavadocRenderer {
     private static final String STYLESHEET_TARGET_FILE = "style.css";
 
