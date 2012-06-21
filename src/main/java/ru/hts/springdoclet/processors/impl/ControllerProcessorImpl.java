@@ -2,11 +2,14 @@ package ru.hts.springdoclet.processors.impl;
 
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.MethodDoc;
+import ru.hts.springdoclet.MethodContextComparator;
 import ru.hts.springdoclet.processors.ControllerProcessor;
 import ru.hts.springdoclet.processors.MethodProcessor;
 import ru.hts.springdoclet.render.RenderContext;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Processes controller class
@@ -23,7 +26,7 @@ public class ControllerProcessorImpl implements ControllerProcessor {
         result.put("name", classDoc.typeName());
         result.put("title", classDoc.commentText());
 
-        List<Map<String, Object>> methods = new ArrayList<Map<String, Object>>();
+        List<RenderContext> methods = new ArrayList<RenderContext>();
         for (MethodDoc methodDoc : classDoc.methods()) {
             RenderContext context = methodProcessor.process(classDoc, methodDoc);
             if (context != null) {
@@ -31,13 +34,7 @@ public class ControllerProcessorImpl implements ControllerProcessor {
             }
         }
 
-        Collections.sort(methods, new Comparator<Map<String, Object>>() {
-            @Override
-            public int compare(Map<String, Object> o1, Map<String, Object> o2) {
-                int comp1 = o1.get("url").toString().compareTo(o2.get("url").toString());
-                return comp1 != 0 ? comp1 : o1.get("method").toString().compareTo(o2.get("method").toString());
-            }
-        });
+        Collections.sort(methods, new MethodContextComparator());
 
         result.put("methods", methods);
 

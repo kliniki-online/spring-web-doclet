@@ -6,11 +6,14 @@ import freemarker.template.TemplateException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import ru.hts.springdoclet.MethodContextComparator;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +24,8 @@ import java.util.Map;
 @Component
 public class FreemarkerJavadocRenderer implements JavadocRenderer {
     private static final String STYLESHEET_TARGET_FILE = "style.css";
+    private static final String INDEX_FILE = "index.html";
+    private static final String URLMAP_FILE = "urlmap.html";
 
     private String template = "base.ftl";
     private String outputDir = "webapi";
@@ -33,15 +38,14 @@ public class FreemarkerJavadocRenderer implements JavadocRenderer {
         config.setDefaultEncoding("UTF-8");
         config.setClassForTemplateLoading(getClass(), "/templates/");
 
-        RenderContext listContext = createBaseContext(".");
-        listContext.put("packages", packages);
-
         if (stylesheetFile != null) {
             FileUtils.copyFile(new File(stylesheetFile), new File(outputDir + "/" + STYLESHEET_TARGET_FILE));
         }
 
         try {
             new File(outputDir).mkdir();
+
+            List<RenderContext> methodList = new ArrayList<RenderContext>();
 
             for (String packageName : packages.keySet()) {
                 String subDir = packageName.replaceAll("\\.", "/");
@@ -54,18 +58,34 @@ public class FreemarkerJavadocRenderer implements JavadocRenderer {
                     basePath.append("../");
                 }
 
-                for (Map context : packages.get(packageName)) {
-                    RenderContext controllerContext = createBaseContext(basePath.toString());
-                    String name = context.get("name").toString();
-                    controllerContext.put("controller", context);
-                    controllerContext.put("template", template);
-                    controllerContext.put("indexPath", basePath + "index.html");
-                    context.put("path", subDir);
-                    renderTemplate(config, "controller.ftl", controllerContext, baseDir + "/" + name + ".html");
+                for (RenderContext controllerContext : packages.get(packageName)) {
+                    String name = controllerContext.get("name").toString();
+
+                    String link = subDir + '/' + name + ".html";
+                    controllerContext.put("link", link);
+
+                    for (RenderContext methodContext : (List<RenderContext>) controllerContext.get("methods")) {
+                        methodContext.put("controllerLink", link);
+                        methodContext.put("anchor", methodContext.get("method") + ":" + methodContext.get("url"));
+                        methodList.add(methodContext);
+                    }
+
+                    RenderContext controllerPageContext = createBaseContext(basePath.toString());
+                    controllerPageContext.put("controller", controllerContext);
+                    controllerPageContext.put("template", template);
+
+                    renderTemplate(config, "controller.ftl", controllerPageContext, link);
                 }
             }
 
-            renderTemplate(config, "index.ftl", listContext, outputDir + '/' + "index.html");
+            Collections.sort(methodList, new MethodContextComparator());
+            RenderContext urlmapContext = createBaseContext("./");
+            urlmapContext.put("methods", methodList);
+            renderTemplate(config, "urlmap.ftl", urlmapContext, URLMAP_FILE);
+
+            RenderContext indexContext = createBaseContext("./");
+            indexContext.put("packages", packages);
+            renderTemplate(config, "index.ftl", indexContext, INDEX_FILE);
         } catch (TemplateException e) {
             e.printStackTrace();
             return false;
@@ -78,8 +98,10 @@ public class FreemarkerJavadocRenderer implements JavadocRenderer {
         RenderContext context = new RenderContext();
         context.put("template", template);
         context.put("windowTitle", windowTitle);
+        context.put("indexPath", baseDir + INDEX_FILE);
+        context.put("urlmapPath", baseDir + URLMAP_FILE);
         if (stylesheetFile != null) {
-            context.put("stylesheet", baseDir + "/" + STYLESHEET_TARGET_FILE);
+            context.put("stylesheet", baseDir + STYLESHEET_TARGET_FILE);
         }
         return context;
     }
@@ -87,7 +109,7 @@ public class FreemarkerJavadocRenderer implements JavadocRenderer {
     private void renderTemplate(Configuration config, String templateName, Map<String, Object> context, String outputFilename) throws IOException, TemplateException {
         Template listTemplate = config.getTemplate(templateName);
 
-        Writer out = new FileWriter(outputFilename);
+        Writer out = new FileWriter(outputDir + '/' + outputFilename);
         try {
             listTemplate.process(context, out);
         } finally {

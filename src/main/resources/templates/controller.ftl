@@ -3,14 +3,15 @@
 [#assign title]${controller['title']}[/#assign]
 
 [#assign content]
-<p>
-    <a href="${indexPath}">← Контроллеры</a>
-</p>
+<nav>
+    <a href="${indexPath}">Контроллеры</a>
+    <a href="${urlmapPath}">Карта URL'ов</a>
+</nav>
 <h2>${controller['title']} (${controller['name']})</h2>
 <ul>
     [#list controller['methods'] as method]
         <li>
-            <h3>${method['method']}: ${method['url']}</h3>
+            <h3><a name="${method['anchor']}">${method['method']}: ${method['url']}</a></h3>
 
             <p>${method['description']}</p>
 

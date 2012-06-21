@@ -3,14 +3,15 @@
 [#assign title]Контроллеры[/#assign]
 
 [#assign content]
+<nav>
+    <a href="${urlmapPath}">Карта URL'ов</a>
+</nav>
     [#list packages?keys as packageName]
     <h2>${packageName}</h2>
     <ul>
         [#list packages[packageName] as controller]
             <li>
-                <a href="${controller['path']}/${controller['name']}.html">
-                ${controller['title']} (${controller['name']})
-                </a>
+                <a href="${controller['link']}">${controller['title']} (${controller['name']})</a>
             </li>
         [/#list]
     </ul>
