@@ -3,6 +3,7 @@ package ru.hts.springdoclet;
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.LanguageVersion;
 import com.sun.javadoc.RootDoc;
+import com.sun.tools.javadoc.Main;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.ClassPathResource;
@@ -98,6 +99,19 @@ public class SpringDoclet {
         } else {
             return 0;
         }
+    }
+
+
+    public static void main(String[] args) {
+        Main.execute("javadoc", "ru.hts.springdoclet.SpringDoclet", new String[]{
+                "-public",
+                "-sourcepath",
+                "/home/ivan/projects/kliniki-online/src/main/java/",
+                "-subpackages",
+                "ru.hts.kliniki.web.clinicside:ru.hts.kliniki.web.publicside",
+                "-windowtitle",
+                "Kliniki Online Web API",
+        });
     }
 
     public void setRenderer(FreemarkerJavadocRenderer renderer) {

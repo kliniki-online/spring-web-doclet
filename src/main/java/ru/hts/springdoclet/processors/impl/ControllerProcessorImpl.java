@@ -25,7 +25,10 @@ public class ControllerProcessorImpl implements ControllerProcessor {
 
         List<Map<String, Object>> methods = new ArrayList<Map<String, Object>>();
         for (MethodDoc methodDoc : classDoc.methods()) {
-            methods.add(methodProcessor.process(classDoc, methodDoc));
+            RenderContext context = methodProcessor.process(classDoc, methodDoc);
+            if (context != null) {
+                methods.add(context);
+            }
         }
 
         Collections.sort(methods, new Comparator<Map<String, Object>>() {
