@@ -42,7 +42,7 @@ public class ParameterProcessorImpl implements ParameterProcessor {
                 continue;
             }
 
-            param.put("description", descriptionMap.get(name));
+            param.put("description", descriptionMap.get(paramDoc.name()));
             param.put("type", JavadocUtils.formatTypeName(paramDoc.type()));
 
             result.add(param);
