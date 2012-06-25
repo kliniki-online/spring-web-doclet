@@ -27,7 +27,6 @@ public class FieldProcessorImpl implements FieldProcessor {
             RenderContext field = new RenderContext();
 
             field.put("name", fieldDoc.name());
-            field.put("type", JavadocUtils.formatTypeName(fieldDoc.type()));
             field.put("description", fieldDoc.commentText());
 
             Class type = getRequiredClass(fieldDoc.type().qualifiedTypeName());
@@ -37,15 +36,21 @@ public class FieldProcessorImpl implements FieldProcessor {
                 if (collectionType.length != 0) {
                     ClassDoc collectionClassDoc = classDoc.findClass(collectionType[0].qualifiedTypeName());
                     field.put("child", process(collectionClassDoc));
+                    field.put("type", "List");
                 }
-            }
 
-            String packageName = (type.getPackage() != null) ? type.getPackage().getName() : null;
-            if (!type.isPrimitive() && (packageName != null) && !packageName.startsWith("java.")) {
-                ClassDoc fieldClassDoc = classDoc.findClass(fieldDoc.type().qualifiedTypeName());
-                field.put("child", process(fieldClassDoc));
-            }
+            } else {
+                String packageName = (type.getPackage() != null) ? type.getPackage().getName() : null;
+                if (!type.isPrimitive() && (packageName != null) && !packageName.startsWith("java.")) {
+                    ClassDoc fieldClassDoc = classDoc.findClass(fieldDoc.type().qualifiedTypeName());
+                    field.put("child", process(fieldClassDoc));
+                    field.put("type", "Object");
 
+                } else {
+                    field.put("type", JavadocUtils.formatTypeName(fieldDoc.type()));
+                }
+
+            }
             result.add(field);
         }
 

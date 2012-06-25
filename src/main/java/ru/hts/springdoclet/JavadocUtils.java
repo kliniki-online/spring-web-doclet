@@ -2,8 +2,11 @@ package ru.hts.springdoclet;
 
 import com.sun.javadoc.AnnotationDesc;
 import com.sun.javadoc.AnnotationValue;
+import com.sun.javadoc.ParameterizedType;
 import com.sun.javadoc.Type;
 import org.apache.commons.lang3.ClassUtils;
+
+import java.util.Collection;
 
 /** @author Ivan Sungurov */
 public class JavadocUtils {
@@ -13,14 +16,22 @@ public class JavadocUtils {
     }
 
     public static String formatTypeName(Type type) {
-        String typeName = type.simpleTypeName();
+        String typeName;
+        Class classType = ReflectionUtils.getRequiredClass(type.qualifiedTypeName());
+
         if (type.isPrimitive()) {
-            try {
-                typeName = ClassUtils.primitiveToWrapper(ClassUtils.getClass(typeName)).getSimpleName();
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
+            typeName = ClassUtils.primitiveToWrapper(classType).getSimpleName();
+        } else {
+            typeName = type.simpleTypeName();
         }
-        return typeName + type.dimension();
+
+        if (Collection.class.isAssignableFrom(classType)) {
+            ParameterizedType parameterizedType = type.asParameterizedType();
+            typeName = parameterizedType.typeArguments()[0].simpleTypeName() + "[]";
+        } else {
+            typeName += type.dimension();
+        }
+
+        return typeName;
     }
 }
