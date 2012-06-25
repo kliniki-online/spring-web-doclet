@@ -94,8 +94,8 @@
         <td class="col-type">${param['type']}</td>
         <td class="col-description">${param['description']!''}</td>
     </tr>
-        [#if param['list']??]
-            [@listparams param['list'] indentSize+1/]
+        [#if param['child']??]
+            [@listparams param['child'] indentSize+1/]
         [/#if]
     [/#list]
 [/#macro]

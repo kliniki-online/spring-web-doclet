@@ -36,8 +36,14 @@ public class FieldProcessorImpl implements FieldProcessor {
                 Type[] collectionType = fieldDoc.type().asParameterizedType().typeArguments();
                 if (collectionType.length != 0) {
                     ClassDoc collectionClassDoc = classDoc.findClass(collectionType[0].qualifiedTypeName());
-                    field.put("list", process(collectionClassDoc));
+                    field.put("child", process(collectionClassDoc));
                 }
+            }
+
+            String packageName = (type.getPackage() != null) ? type.getPackage().getName() : null;
+            if (!type.isPrimitive() && (packageName != null) && !packageName.startsWith("java.")) {
+                ClassDoc fieldClassDoc = classDoc.findClass(fieldDoc.type().qualifiedTypeName());
+                field.put("child", process(fieldClassDoc));
             }
 
             result.add(field);
