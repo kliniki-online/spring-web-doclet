@@ -7,6 +7,7 @@ import com.sun.tools.javadoc.Main;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Controller;
 import ru.hts.springdoclet.processors.ControllerProcessor;
 import ru.hts.springdoclet.render.FreemarkerJavadocRenderer;
 import ru.hts.springdoclet.render.RenderContext;
@@ -45,7 +46,8 @@ public class SpringDoclet {
         Map<String, List<RenderContext>> packageMap = new TreeMap<String, List<RenderContext>>();
 
         for (ClassDoc classDoc : root.classes()) {
-            if (classDoc.containingClass() != null) {
+            Class classType = ReflectionUtils.getRequiredClass(classDoc.qualifiedTypeName());
+            if (!classType.isAnnotationPresent(Controller.class)) {
                 continue;
             }
 
@@ -108,7 +110,7 @@ public class SpringDoclet {
                 "-sourcepath",
                 "/home/ivan/projects/kliniki-online/src/main/java/",
                 "-subpackages",
-                "ru.hts.kliniki.web.clinicside:ru.hts.kliniki.web.publicside",
+                "ru.hts.kliniki",
                 "-windowtitle",
                 "Kliniki Online Web API",
         });
