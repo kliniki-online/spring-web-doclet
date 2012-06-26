@@ -29,8 +29,8 @@ public class MethodProcessorImpl implements MethodProcessor {
         result.put("description", methodDoc.commentText());
 
         ArrayList<AnnotationDesc> annotations = new ArrayList<AnnotationDesc>();
-        annotations.addAll(Arrays.asList(methodDoc.annotations()));
         annotations.addAll(Arrays.asList(classDoc.annotations()));
+        annotations.addAll(Arrays.asList(methodDoc.annotations()));
 
         boolean mapped = false;
         for (AnnotationDesc annotationDoc : annotations) {
