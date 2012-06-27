@@ -17,27 +17,27 @@ Controller title will be taken from controller class Javadoc comment
 Controller file structure
 -------------------------
 Controller title (controller simple name)
-* METHOD: /url/
+* METHOD: /url/<br/>
   (from @RequestMapping annotation)
 
-  Description
+  Description<br/>
   (from method Javadoc comment)
 
-  Access rights:
+  Access rights:<br/>
   (from @RolesAllowed annotation)
   * Role1
   * Role2
 
-  Input parameters:
-  | Parameter name | Type | Required? | Description |
+  Input parameters:<br/>
+  | Parameter name | Type | Required? | Description |<br/>
   (from Javadoc comment and @param tag and from @RequestParam/@PathVariable annotations)
 
-  Return object:
-  | Field name | Type | Description |
+  Return object:<br/>
+  | Field name | Type | Description |<br/>
   (from return class fields Javadoc comments)
 
-  Errors:
-  | Exception type | Description |
+  Errors:<br/>
+  | Exception type | Description |<br/>
   (from Javadoc @throws tag. If tag description is empty description will be taken from exception class Javadoc)
 
 Documentation example
