@@ -11,4 +11,14 @@ public class ReflectionUtils {
             throw new RuntimeException(e);
         }
     }
+
+    public static Class<?> getOptionalClass(String className) {
+        try {
+            return ClassUtils.getClass(className);
+        } catch (ClassNotFoundException e) {
+            return null;
+        } catch (NoClassDefFoundError e) {
+            return null;
+        }
+    }
 }

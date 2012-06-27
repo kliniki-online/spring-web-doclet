@@ -4,14 +4,13 @@ import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.FieldDoc;
 import com.sun.javadoc.Type;
 import ru.hts.springdoclet.JavadocUtils;
+import ru.hts.springdoclet.ReflectionUtils;
 import ru.hts.springdoclet.processors.FieldProcessor;
 import ru.hts.springdoclet.render.RenderContext;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import static ru.hts.springdoclet.ReflectionUtils.getRequiredClass;
 
 /**
  * Processes class fields
@@ -28,29 +27,30 @@ public class FieldProcessorImpl implements FieldProcessor {
 
             field.put("name", fieldDoc.name());
             field.put("description", fieldDoc.commentText());
+            field.put("type", JavadocUtils.formatTypeName(fieldDoc.type()));
 
-            Class type = getRequiredClass(fieldDoc.type().qualifiedTypeName());
+            Class type = ReflectionUtils.getOptionalClass(fieldDoc.type().qualifiedTypeName());
 
-            if (Collection.class.isAssignableFrom(type)) {
-                Type[] collectionType = fieldDoc.type().asParameterizedType().typeArguments();
-                if (collectionType.length != 0) {
-                    ClassDoc collectionClassDoc = classDoc.findClass(collectionType[0].qualifiedTypeName());
-                    field.put("child", process(collectionClassDoc));
-                    field.put("type", "List");
-                }
-
-            } else {
-                String packageName = (type.getPackage() != null) ? type.getPackage().getName() : null;
-                if (!type.isPrimitive() && (packageName != null) && !packageName.startsWith("java.")) {
-                    ClassDoc fieldClassDoc = classDoc.findClass(fieldDoc.type().qualifiedTypeName());
-                    field.put("child", process(fieldClassDoc));
-                    field.put("type", "Object");
+            if (type != null) {
+                if (Collection.class.isAssignableFrom(type)) {
+                    Type[] collectionType = fieldDoc.type().asParameterizedType().typeArguments();
+                    if (collectionType.length != 0) {
+                        ClassDoc collectionClassDoc = classDoc.findClass(collectionType[0].qualifiedTypeName());
+                        field.put("child", process(collectionClassDoc));
+                        field.put("type", "List");
+                    }
 
                 } else {
-                    field.put("type", JavadocUtils.formatTypeName(fieldDoc.type()));
-                }
+                    String packageName = (type.getPackage() != null) ? type.getPackage().getName() : null;
+                    if ((packageName != null) && !packageName.startsWith("java.")) {
+                        ClassDoc fieldClassDoc = classDoc.findClass(fieldDoc.type().qualifiedTypeName());
+                        field.put("child", process(fieldClassDoc));
+                        field.put("type", "Object");
 
+                    }
+                }
             }
+
             result.add(field);
         }
 

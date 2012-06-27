@@ -1,9 +1,6 @@
 package ru.hts.springdoclet;
 
-import com.sun.javadoc.AnnotationDesc;
-import com.sun.javadoc.AnnotationValue;
-import com.sun.javadoc.ParameterizedType;
-import com.sun.javadoc.Type;
+import com.sun.javadoc.*;
 import org.apache.commons.lang3.ClassUtils;
 
 import java.util.Collection;
@@ -17,7 +14,7 @@ public class JavadocUtils {
 
     public static String formatTypeName(Type type) {
         String typeName;
-        Class classType = ReflectionUtils.getRequiredClass(type.qualifiedTypeName());
+        Class classType = ReflectionUtils.getOptionalClass(type.qualifiedTypeName());
 
         if (type.isPrimitive()) {
             typeName = ClassUtils.primitiveToWrapper(classType).getSimpleName();
@@ -25,7 +22,7 @@ public class JavadocUtils {
             typeName = type.simpleTypeName();
         }
 
-        if (Collection.class.isAssignableFrom(classType)) {
+        if ((classType != null) && Collection.class.isAssignableFrom(classType)) {
             ParameterizedType parameterizedType = type.asParameterizedType();
             typeName = parameterizedType.typeArguments()[0].simpleTypeName() + "[]";
         } else {
@@ -33,5 +30,19 @@ public class JavadocUtils {
         }
 
         return typeName;
+    }
+
+    public static boolean hasAnnotation(ClassDoc classDoc, String qualifiedType) {
+        try {
+            for (AnnotationDesc annotationDesc : classDoc.annotations()) {
+                if (annotationDesc.annotationType().qualifiedTypeName().equals(qualifiedType)) {
+                    return true;
+                }
+            }
+        } catch (ClassCastException e) {
+            // happens when annotation class is not in classpath
+            // since we have no access to compiled classes just ignore it
+        }
+        return false;
     }
 }

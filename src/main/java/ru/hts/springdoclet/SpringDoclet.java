@@ -23,6 +23,8 @@ import java.util.TreeMap;
  */
 public class SpringDoclet {
 
+    private static final String CONTROLLER_CLASS = Controller.class.getCanonicalName();
+
     private FreemarkerJavadocRenderer renderer;
 
     private ControllerProcessor controllerProcessor;
@@ -46,8 +48,7 @@ public class SpringDoclet {
         Map<String, List<RenderContext>> packageMap = new TreeMap<String, List<RenderContext>>();
 
         for (ClassDoc classDoc : root.classes()) {
-            Class classType = ReflectionUtils.getRequiredClass(classDoc.qualifiedTypeName());
-            if (!classType.isAnnotationPresent(Controller.class)) {
+            if (!JavadocUtils.hasAnnotation(classDoc, CONTROLLER_CLASS)) {
                 continue;
             }
 

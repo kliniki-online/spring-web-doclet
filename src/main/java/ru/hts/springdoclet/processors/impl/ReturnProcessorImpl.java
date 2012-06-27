@@ -3,6 +3,7 @@ package ru.hts.springdoclet.processors.impl;
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.MethodDoc;
 import com.sun.javadoc.Tag;
+import ru.hts.springdoclet.ReflectionUtils;
 import ru.hts.springdoclet.processors.FieldProcessor;
 import ru.hts.springdoclet.processors.ReturnProcessor;
 import ru.hts.springdoclet.render.RenderContext;
@@ -24,12 +25,16 @@ public class ReturnProcessorImpl implements ReturnProcessor {
     @Override
     public RenderContext process(ClassDoc classDoc, MethodDoc methodDoc) {
         boolean ignoreReturn = false;
+
         String returnType = methodDoc.returnType().qualifiedTypeName();
-        Class returnClass = getRequiredClass(returnType);
-        for (Class ignoreClass : ignoreTypes) {
-            if (ignoreClass.isAssignableFrom(returnClass)) {
-                ignoreReturn = true;
-                break;
+        Class returnClass = ReflectionUtils.getOptionalClass(returnType);
+
+        if (returnClass != null) {
+            for (Class ignoreClass : ignoreTypes) {
+                if (ignoreClass.isAssignableFrom(returnClass)) {
+                    ignoreReturn = true;
+                    break;
+                }
             }
         }
 
