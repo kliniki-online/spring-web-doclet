@@ -1,23 +1,20 @@
 package ru.hts.springdoclet;
 
-import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.LanguageVersion;
+import com.sun.javadoc.PackageDoc;
 import com.sun.javadoc.RootDoc;
 import com.sun.tools.javadoc.Main;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Controller;
-import ru.hts.springdoclet.processors.ControllerProcessor;
+import ru.hts.springdoclet.processors.PackageProcessor;
 import ru.hts.springdoclet.render.FreemarkerJavadocRenderer;
 import ru.hts.springdoclet.render.RenderContext;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * Javadoc Doclet which allows to collect information about Spring Web controllers
@@ -25,11 +22,9 @@ import java.util.TreeMap;
  */
 public class SpringDoclet {
 
-    private static final String CONTROLLER_CLASS = Controller.class.getCanonicalName();
-
     private FreemarkerJavadocRenderer renderer;
 
-    private ControllerProcessor controllerProcessor;
+    private PackageProcessor packageProcessor;
 
     public void configure(String[][] options) {
         for (String[] opt : options) {
@@ -67,27 +62,17 @@ public class SpringDoclet {
     }
 
     public boolean process(RootDoc root) {
-        Map<String, List<RenderContext>> packageMap = new TreeMap<String, List<RenderContext>>();
+        List<RenderContext> packageContextList = new ArrayList<RenderContext>();
 
-        for (ClassDoc classDoc : root.classes()) {
-            if (!JavadocUtils.hasAnnotation(classDoc, CONTROLLER_CLASS)) {
-                continue;
+        for (PackageDoc packageDoc : root.specifiedPackages()) {
+            RenderContext packageContext = packageProcessor.process(packageDoc);
+            if (packageContext != null) {
+                packageContextList.add(packageContext);
             }
-
-            RenderContext context = controllerProcessor.process(classDoc);
-
-            String packageName = context.get("package").toString();
-            List<RenderContext> controllers = packageMap.get(packageName);
-            if (controllers == null) {
-                controllers = new ArrayList<RenderContext>();
-                packageMap.put(packageName, controllers);
-            }
-
-            controllers.add(context);
         }
 
         try {
-            renderer.render(packageMap);
+            renderer.render(packageContextList);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -126,7 +111,6 @@ public class SpringDoclet {
         }
     }
 
-
     public static void main(String[] args) {
         Main.execute("javadoc", SpringDoclet.class.getCanonicalName(), args);
     }
@@ -135,7 +119,7 @@ public class SpringDoclet {
         this.renderer = renderer;
     }
 
-    public void setControllerProcessor(ControllerProcessor controllerProcessor) {
-        this.controllerProcessor = controllerProcessor;
+    public void setPackageProcessor(PackageProcessor packageProcessor) {
+        this.packageProcessor = packageProcessor;
     }
 }

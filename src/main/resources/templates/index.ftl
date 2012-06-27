@@ -6,10 +6,10 @@
 <nav>
     <a href="${urlmapPath}">Карта URL'ов</a>
 </nav>
-    [#list packages?keys as packageName]
-    <h2 class="package">${packageName}</h2>
+    [#list packages as package]
+    <h2 class="package">${package['overview']} (${package['name']})</h2>
     <ul class="controller-list">
-        [#list packages[packageName] as controller]
+        [#list package['controllers'] as controller]
             <li>
                 <a href="${controller['link']}">${controller['title']} (${controller['name']})</a>
             </li>

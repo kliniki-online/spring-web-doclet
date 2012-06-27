@@ -4,8 +4,12 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="springDoclet" class="ru.hts.springdoclet.SpringDoclet">
-        <property name="controllerProcessor" ref="controllerProcessor"/>
+        <property name="packageProcessor" ref="packageProcessor"/>
         <property name="renderer" ref="renderer"/>
+    </bean>
+
+    <bean id="packageProcessor" class="ru.hts.springdoclet.processors.impl.PackageProcessorImpl">
+        <property name="controllerProcessor" ref="controllerProcessor"/>
     </bean>
 
     <bean id="controllerProcessor" class="ru.hts.springdoclet.processors.impl.ControllerProcessorImpl">

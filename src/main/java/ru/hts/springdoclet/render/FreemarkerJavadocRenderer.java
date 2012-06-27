@@ -33,7 +33,7 @@ public class FreemarkerJavadocRenderer implements JavadocRenderer {
     private String stylesheetFile;
 
     @Override
-    public boolean render(Map<String, List<RenderContext>> packages) throws IOException {
+    public boolean render(List<RenderContext> packages) throws IOException {
         Configuration config = new Configuration();
         config.setDefaultEncoding("UTF-8");
         config.setClassForTemplateLoading(getClass(), "/templates/");
@@ -47,8 +47,8 @@ public class FreemarkerJavadocRenderer implements JavadocRenderer {
 
             List<RenderContext> methodList = new ArrayList<RenderContext>();
 
-            for (String packageName : packages.keySet()) {
-                String subDir = packageName.replaceAll("\\.", "/");
+            for (RenderContext packageContext : packages) {
+                String subDir = packageContext.get("name").toString().replaceAll("\\.", "/");
                 String baseDir = outputDir + '/' + subDir;
                 FileUtils.forceMkdir(new File(baseDir));
 
@@ -58,7 +58,7 @@ public class FreemarkerJavadocRenderer implements JavadocRenderer {
                     basePath.append("../");
                 }
 
-                for (RenderContext controllerContext : packages.get(packageName)) {
+                for (RenderContext controllerContext : (List<RenderContext>) packageContext.get("controllers")) {
                     String name = controllerContext.get("name").toString();
 
                     String link = subDir + '/' + name + ".html";
