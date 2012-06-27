@@ -24,9 +24,9 @@ Controller title (controller simple name)
   (from method Javadoc comment)
 
   Access rights:
+  (from @RolesAllowed annotation)
   * Role1
   * Role2
-  (from @RolesAllowed annotation)
 
   Input parameters:
   | Parameter name | Type | Required? | Description |
