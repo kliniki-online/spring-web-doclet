@@ -4,12 +4,91 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ru.hts</groupId>
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
+    <groupId>ru.kliniki-online</groupId>
     <artifactId>spring-doclet</artifactId>
-    <version>0.1</version>
+    <version>0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>SpringDoclet</name>
+    <description>
+        SpringDoclet is an extension to Javadoc utility (Doclet) which generates
+        web API documentation for backends based on Spring Web MVC framework.
+    </description>
+    <url>https://github.com/kliniki-online/spring-doclet</url>
+    <licenses>
+        <license>
+            <name>GNU General Public License, Version 3 and better</name>
+            <url>http://www.gnu.org/copyleft/gpl.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Ivan Sungurov</name>
+            <organization>HTS</organization>
+            <url>http://htsite.ru/</url>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/kliniki-online/spring-doclet</url>
+        <connection>scm:git:git://github.com/kliniki-online/spring-doclet</connection>
+        <developerConnection>scm:git:git@github.com:kliniki-online/spring-doclet.git</developerConnection>
+    </scm>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.1.2</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.5</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.0.2</version>
