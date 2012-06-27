@@ -4,6 +4,7 @@ import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.MethodDoc;
 import com.sun.javadoc.Tag;
 import com.sun.javadoc.ThrowsTag;
+import org.apache.commons.lang3.StringUtils;
 import ru.hts.springdoclet.processors.ThrowsProcessor;
 import ru.hts.springdoclet.render.RenderContext;
 
@@ -24,7 +25,12 @@ public class ThrowsProcessorImpl implements ThrowsProcessor {
             RenderContext exception = new RenderContext();
 
             exception.put("type", throwsTag.exceptionName());
-            exception.put("description", throwsTag.exceptionComment());
+
+            ClassDoc exceptionClassDoc = classDoc.findClass(throwsTag.exceptionType().qualifiedTypeName());
+            String description = StringUtils.isNotEmpty(throwsTag.exceptionComment()) ?
+                    throwsTag.exceptionComment() :
+                    exceptionClassDoc.commentText();
+            exception.put("description", description);
 
             result.add(exception);
         }
