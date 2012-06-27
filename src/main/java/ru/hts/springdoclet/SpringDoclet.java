@@ -106,15 +106,7 @@ public class SpringDoclet {
 
 
     public static void main(String[] args) {
-        Main.execute("javadoc", "ru.hts.springdoclet.SpringDoclet", new String[]{
-                "-public",
-                "-sourcepath",
-                "/home/ivan/projects/kliniki-online/src/main/java/",
-                "-subpackages",
-                "ru.hts.kliniki",
-                "-windowtitle",
-                "Kliniki Online Web API",
-        });
+        Main.execute("javadoc", SpringDoclet.class.getCanonicalName(), args);
     }
 
     public void setRenderer(FreemarkerJavadocRenderer renderer) {
