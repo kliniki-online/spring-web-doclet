@@ -7,7 +7,7 @@
     <a href="${indexPath}">Контроллеры</a>
 </nav>
 <h2>Карта URL'ов</h2>
-<ul>
+<ul class="url-list">
     [#list methods as method]
         <li>
             <a href="${method['controllerLink']}#${method['anchor']}">

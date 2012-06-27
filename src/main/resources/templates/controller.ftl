@@ -11,7 +11,7 @@
 <ul>
     [#list controller['methods'] as method]
         <li>
-            <h3><a name="${method['anchor']}">${method['method']}: ${method['url']}</a></h3>
+            <h3><a class="anchor" name="${method['anchor']}">${method['method']}: ${method['url']}</a></h3>
 
             <p>${method['description']}</p>
 

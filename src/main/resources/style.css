@@ -1,0 +1,49 @@
+a {
+    color: blue;
+}
+
+a.anchor {
+    color: black;
+}
+
+nav {
+    background-color: #eeeeff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    padding: 5px;
+    border-top: 1px black solid;
+    border-bottom: 1px black solid;
+}
+
+nav a {
+    margin-right: 7px;
+}
+
+h4 {
+    margin-bottom: 8px;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+table tr td, table tr th {
+    border: 1px solid black;
+    padding: 1px 8px;
+}
+
+table tr th {
+    background-color: #cfcfcf;
+}
+
+h2.package {
+    background-color: #ccccff;
+}
+
+.controller-list li, .url-list li {
+    padding: 2px 0;
+}
+
+.col-required, .col-type {
+    text-align: center;
+}

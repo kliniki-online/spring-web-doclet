@@ -4,6 +4,7 @@ import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.LanguageVersion;
 import com.sun.javadoc.RootDoc;
 import com.sun.tools.javadoc.Main;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.ClassPathResource;
@@ -12,6 +13,7 @@ import ru.hts.springdoclet.processors.ControllerProcessor;
 import ru.hts.springdoclet.render.FreemarkerJavadocRenderer;
 import ru.hts.springdoclet.render.RenderContext;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +43,26 @@ public class SpringDoclet {
             } else if ("-stylesheetfile".equals(optName)) {
                 renderer.setStylesheetFile(optValue);
             }
+        }
+
+        if (renderer.getStylesheetFile() == null) {
+            renderer.setStylesheetFile(getDefaultStylesheetFile());
+        }
+    }
+
+    private String getDefaultStylesheetFile() {
+        try {
+            File tmpSpreedsheet = File.createTempFile("spring-doclet", ".css");
+            tmpSpreedsheet.deleteOnExit();
+
+            InputStream is = getClass().getResourceAsStream("/style.css");
+            OutputStream os = new FileOutputStream(tmpSpreedsheet);
+
+            IOUtils.copy(is, os);
+
+            return tmpSpreedsheet.getAbsolutePath();
+        } catch (IOException e) {
+            return null;
         }
     }
 

@@ -130,6 +130,10 @@ public class FreemarkerJavadocRenderer implements JavadocRenderer {
         this.windowTitle = windowTitle;
     }
 
+    public String getStylesheetFile() {
+        return stylesheetFile;
+    }
+
     public void setStylesheetFile(String stylesheetFile) {
         this.stylesheetFile = stylesheetFile;
     }
