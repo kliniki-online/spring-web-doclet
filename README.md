@@ -1,13 +1,105 @@
 SpringDoclet
 ============
-SpringDoclet is an extension to Javadoc utility (Doclet) which generates
-web API documentation for backends based on
-[Spring Web MVC]:http://static.springsource.org/spring/docs/current/spring-framework-reference/html/mvc.html
-framework.
+SpringDoclet is an extension to Javadoc utility (Doclet) which generates web API documentation for backends based on
+Spring Web MVC framework: <http://static.springsource.org/spring/docs/current/spring-framework-reference/html/mvc.html>.
 
-Usage
-=====
-See 'maven-javadoc-plugin' documentation: http://maven.apache.org/plugins/maven-javadoc-plugin/javadoc-mojo.html
+Output documentation structure
+==============================
+
+Index file structure
+--------------------
+Package title (package fully qualified name)
+* Controller title (controller simple name)
+
+Package title will be taken from standard package description file (package.html, package-info.html or package-info.java).
+Controller title will be taken from controller class Javadoc comment
+
+Controller file structure
+-------------------------
+Controller title (controller simple name)
+* METHOD: /url/
+  (from @RequestMapping annotation)
+
+  Description
+  (from method Javadoc comment)
+
+  Access rights:
+  * Role1
+  * Role2
+  (from @RolesAllowed annotation)
+
+  Input parameters:
+  | Parameter name | Type | Required? | Description |
+  (from Javadoc comment and @param tag and from @RequestParam/@PathVariable annotations)
+
+  Return object:
+  | Field name | Type | Description |
+  (from return class fields Javadoc comments)
+
+  Errors:
+  | Exception type | Description |
+  (from Javadoc @throws tag. If tag description is empty description will be taken from exception class Javadoc)
+
+Documentation example
+---------------------
+```java
+/**
+ * Articles
+ */
+@Controller
+@RolesAllowed("ROLE_MANAGER")
+public class ArticleController {
+
+    /* ... */
+
+    /**
+     * Returns article list
+     * @param page  page number
+     * @param limit items per page
+     * @throws InvalidPageNumberException if page number is invalid
+     */
+    @ResponseBody
+    @RequestMapping(value = "/articles", method = RequestMethod.GET)
+    public GetArticlesResponse getArticles(
+            @RequestParam(value = "page", required = false) Integer page,
+            @RequestParam(value = "limit", required = false) Integer limit
+    ) throws InvalidPageNumberException {
+        GetArticlesResponse response = new GetArticlesResponse();
+
+        /* ... */
+
+        return response;
+    }
+
+    public static class GetArticlesResponse {
+        public static class Article {
+            /** article ID */
+            public Integer id;
+
+            /** article title */
+            public String title;
+
+            /** article URI */
+            public String uri;
+
+            /** article content */
+            public String text;
+        }
+
+        /** articles list */
+        public List<Article> articles = new ArrayList<Article>();
+
+        /** total articles count */
+        public Long totalRecords;
+    }
+
+    /* ... */
+}
+```
+
+Configuration
+=============
+See 'maven-javadoc-plugin' documentation: <http://maven.apache.org/plugins/maven-javadoc-plugin/javadoc-mojo.html>
 Documentation can be built with javadoc:javadoc goal.
 
 Additional parameters
@@ -30,38 +122,40 @@ Additional parameters
 Example
 -------
 ```xml
-<build>
-    <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.8.1</version>
-            <configuration>
-                <subpackages>org.springframework.samples.petclinic.web</subpackages>
-                <quiet>true</quiet>
-                <show>public</show>
-                <doclet>ru.hts.springdoclet.SpringDoclet</doclet>
-                <docletArtifacts>
-                    <docletArtifact>
-                        <groupId>ru.hts</groupId>
-                        <artifactId>spring-doclet</artifactId>
-                        <version>0.1</version>
-                    </docletArtifact>
-                </docletArtifacts>
+<project ...>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.8.1</version>
+                <configuration>
+                    <subpackages>org.springframework.samples.petclinic.web</subpackages>
+                    <quiet>true</quiet>
+                    <show>public</show>
+                    <doclet>ru.hts.springdoclet.SpringDoclet</doclet>
+                    <docletArtifacts>
+                        <docletArtifact>
+                            <groupId>ru.kliniki-online</groupId>
+                            <artifactId>spring-doclet</artifactId>
+                            <version>0.1</version>
+                        </docletArtifact>
+                    </docletArtifacts>
 
-                <!-- useStandardDocletOptions=false is required -->
-                <useStandardDocletOptions>false</useStandardDocletOptions>
+                    <!-- useStandardDocletOptions=false is required -->
+                    <useStandardDocletOptions>false</useStandardDocletOptions>
 
-                <additionalparam>
-                    -stylesheetfile style.css
-                    -windowtitle "Web API"
-                </additionalparam>
-            </configuration>
-        </plugin>
-    </plugins>
-</build>
+                    <additionalparam>
+                        -stylesheetfile style.css
+                        -windowtitle "Web API"
+                    </additionalparam>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
 ```
 
 License
 =======
-[GNU General Public License v3 and greater]: http://www.gnu.org/copyleft/gpl.html
+GNU General Public License, version 3 and better: <http://www.gnu.org/copyleft/gpl.html>
