@@ -1,0 +1,7 @@
+version 0.1.1 (release date: 2012-06-28)
+========================================
+* explicit UTF-8 output encoding
+
+version 0.1   (release date: 2012-06-27)
+========================================
+* initial release

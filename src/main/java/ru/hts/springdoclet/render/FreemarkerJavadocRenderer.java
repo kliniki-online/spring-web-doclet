@@ -36,6 +36,7 @@ public class FreemarkerJavadocRenderer implements JavadocRenderer {
     public boolean render(List<RenderContext> packages) throws IOException {
         Configuration config = new Configuration();
         config.setDefaultEncoding("UTF-8");
+        config.setOutputEncoding("UTF-8");
         config.setClassForTemplateLoading(getClass(), "/templates/");
 
         if (stylesheetFile != null) {
