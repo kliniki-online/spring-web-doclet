@@ -108,7 +108,7 @@ public class FreemarkerJavadocRenderer implements JavadocRenderer {
     }
 
     private void renderTemplate(Configuration config, String templateName, Map<String, Object> context, String outputFilename) throws IOException, TemplateException {
-        Template listTemplate = config.getTemplate(templateName);
+        Template listTemplate = config.getTemplate(templateName, "UTF-8");
 
         Writer out = new FileWriter(outputDir + '/' + outputFilename);
         try {
