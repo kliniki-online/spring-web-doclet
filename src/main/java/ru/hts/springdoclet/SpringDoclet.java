@@ -37,6 +37,8 @@ public class SpringDoclet {
                 renderer.setWindowTitle(optValue);
             } else if ("-stylesheetfile".equals(optName)) {
                 renderer.setStylesheetFile(optValue);
+            } else if ("-docencoding".equals(optName)) {
+                renderer.setOutputEncoding(optValue);
             }
         }
 
@@ -104,7 +106,10 @@ public class SpringDoclet {
     }
 
     public static int optionLength(String option) {
-        if ("-d".equals(option) || "-windowtitle".equals(option) || "-stylesheetfile".equals(option)) {
+        if ("-d".equals(option) ||
+                "-windowtitle".equals(option) ||
+                "-stylesheetfile".equals(option) ||
+                "-docencoding".equals(option)) {
             return 2;
         } else {
             return 0;

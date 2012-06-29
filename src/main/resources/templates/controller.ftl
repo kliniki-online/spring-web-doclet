@@ -37,7 +37,7 @@
                         <tr>
                             <td class="col-param">${param['name']!''}</td>
                             <td class="col-type">${param['type']?html}</td>
-                            <td class="col-required">[#if param['required']!false]✓[/#if]</td>
+                            <td class="col-required">[#if param['required']!false]&#10003;[/#if]</td>
                             <td class="col-description">${param['description']!''}</td>
                         </tr>
                     [/#list]

@@ -8,10 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import ru.hts.springdoclet.MethodContextComparator;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,12 +28,13 @@ public class FreemarkerJavadocRenderer implements JavadocRenderer {
     private String outputDir = "webapi";
     private String windowTitle = "Web API";
     private String stylesheetFile;
+    private String outputEncoding = "UTF-8";
 
     @Override
     public boolean render(List<RenderContext> packages) throws IOException {
         Configuration config = new Configuration();
         config.setDefaultEncoding("UTF-8");
-        config.setOutputEncoding("UTF-8");
+        config.setOutputEncoding(outputEncoding);
         config.setClassForTemplateLoading(getClass(), "/templates/");
 
         if (stylesheetFile != null) {
@@ -71,7 +69,7 @@ public class FreemarkerJavadocRenderer implements JavadocRenderer {
                         methodList.add(methodContext);
                     }
 
-                    RenderContext controllerPageContext = createBaseContext(basePath.toString());
+                    RenderContext controllerPageContext = createBaseContext(config, basePath.toString());
                     controllerPageContext.put("controller", controllerContext);
                     controllerPageContext.put("template", template);
 
@@ -80,11 +78,11 @@ public class FreemarkerJavadocRenderer implements JavadocRenderer {
             }
 
             Collections.sort(methodList, new MethodContextComparator());
-            RenderContext urlmapContext = createBaseContext("./");
+            RenderContext urlmapContext = createBaseContext(config, "./");
             urlmapContext.put("methods", methodList);
             renderTemplate(config, "urlmap.ftl", urlmapContext, URLMAP_FILE);
 
-            RenderContext indexContext = createBaseContext("./");
+            RenderContext indexContext = createBaseContext(config, "./");
             indexContext.put("packages", packages);
             renderTemplate(config, "index.ftl", indexContext, INDEX_FILE);
         } catch (TemplateException e) {
@@ -95,12 +93,13 @@ public class FreemarkerJavadocRenderer implements JavadocRenderer {
         return true;
     }
 
-    private RenderContext createBaseContext(String baseDir) {
+    private RenderContext createBaseContext(Configuration config, String baseDir) {
         RenderContext context = new RenderContext();
         context.put("template", template);
         context.put("windowTitle", windowTitle);
         context.put("indexPath", baseDir + INDEX_FILE);
         context.put("urlmapPath", baseDir + URLMAP_FILE);
+        context.put("charset", config.getOutputEncoding());
         if (stylesheetFile != null) {
             context.put("stylesheet", baseDir + STYLESHEET_TARGET_FILE);
         }
@@ -108,9 +107,9 @@ public class FreemarkerJavadocRenderer implements JavadocRenderer {
     }
 
     private void renderTemplate(Configuration config, String templateName, Map<String, Object> context, String outputFilename) throws IOException, TemplateException {
-        Template listTemplate = config.getTemplate(templateName, "UTF-8");
+        Template listTemplate = config.getTemplate(templateName);
 
-        Writer out = new FileWriter(outputDir + '/' + outputFilename);
+        Writer out = new OutputStreamWriter(new FileOutputStream(outputDir + '/' + outputFilename), outputEncoding);
         try {
             listTemplate.process(context, out);
         } finally {
@@ -137,5 +136,9 @@ public class FreemarkerJavadocRenderer implements JavadocRenderer {
 
     public void setStylesheetFile(String stylesheetFile) {
         this.stylesheetFile = stylesheetFile;
+    }
+
+    public void setOutputEncoding(String outputEncoding) {
+        this.outputEncoding = outputEncoding;
     }
 }

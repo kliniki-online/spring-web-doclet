@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
+    <meta charset="${charset}">
     <title>${windowTitle} | ${title}</title>
 [#if stylesheet??]
     <link rel="stylesheet" href="${stylesheet}">

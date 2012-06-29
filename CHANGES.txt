@@ -1,3 +1,7 @@
+version 0.1.2 (release date: 2012-06-29)
+========================================
+* support for specifying output encoding with -docencoding parameter
+
 version 0.1.1 (release date: 2012-06-28)
 ========================================
 * explicit UTF-8 output encoding

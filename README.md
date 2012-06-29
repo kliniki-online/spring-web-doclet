@@ -106,16 +106,20 @@ Additional parameters
 ---------------------
 <table>
     <tr>
-        <td>-d</td>
+        <td>-d <directory></td>
         <td>specifies output directory for generated documentation</td>
     </tr>
     <tr>
-        <td>-stylesheetfile</td>
+        <td>-stylesheetfile <stylesheet_file></td>
         <td>specifies stylesheet file which will be attached to generated documentation</td>
     </tr>
     <tr>
-        <td>-windowtitle</td>
+        <td>-windowtitle <title></td>
         <td>sets window base title</td>
+    </tr>
+    <tr>
+        <td>-docencoding <encoding></td>
+        <td>sets output documentation encoding</td>
     </tr>
 </table>
 
