@@ -137,7 +137,7 @@ Example
                     <subpackages>org.springframework.samples.petclinic.web</subpackages>
                     <quiet>true</quiet>
                     <show>public</show>
-                    <doclet>ru.hts.springdoclet.SpringDoclet</doclet>
+                    <doclet>ru.hts.springwebdoclet.SpringWebDoclet</doclet>
                     <docletArtifacts>
                         <docletArtifact>
                             <groupId>ru.kliniki-online</groupId>

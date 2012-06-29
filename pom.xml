@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -9,16 +10,16 @@
     </parent>
 
     <groupId>ru.kliniki-online</groupId>
-    <artifactId>spring-doclet</artifactId>
+    <artifactId>spring-web-doclet</artifactId>
     <version>0.1.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>SpringDoclet</name>
+    <name>SpringWebDoclet</name>
     <description>
-        SpringDoclet is an extension to Javadoc utility (Doclet) which generates
+        SpringWebDoclet is an extension to Javadoc utility (Doclet) which generates
         web API documentation for backends based on Spring Web MVC framework.
     </description>
-    <url>https://github.com/kliniki-online/spring-doclet</url>
+    <url>https://github.com/kliniki-online/spring-web-doclet</url>
     <licenses>
         <license>
             <name>GNU General Public License, Version 3 and better</name>
@@ -35,9 +36,9 @@
     </developers>
 
     <scm>
-        <url>https://github.com/kliniki-online/spring-doclet</url>
-        <connection>scm:git:git://github.com/kliniki-online/spring-doclet</connection>
-        <developerConnection>scm:git:git@github.com:kliniki-online/spring-doclet.git</developerConnection>
+        <url>https://github.com/kliniki-online/spring-web-doclet</url>
+        <connection>scm:git:git://github.com/kliniki-online/spring-web-doclet</connection>
+        <developerConnection>scm:git:git@github.com:kliniki-online/spring-web-doclet.git</developerConnection>
     </scm>
 
     <build>
