@@ -1,8 +1,6 @@
 package ru.hts.springwebdoclet.processors.impl;
 
-import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.FieldDoc;
-import com.sun.javadoc.Type;
+import com.sun.javadoc.*;
 import ru.hts.springwebdoclet.JavadocUtils;
 import ru.hts.springwebdoclet.ReflectionUtils;
 import ru.hts.springwebdoclet.processors.FieldProcessor;
@@ -17,6 +15,15 @@ import java.util.List;
  * @author Ivan Sungurov
  */
 public class FieldProcessorImpl implements FieldProcessor {
+
+    private List<String> specifiedPackages = new ArrayList<String>();
+
+    @Override
+    public void init(RootDoc rootDoc) {
+        for (PackageDoc packageDoc : rootDoc.specifiedPackages()) {
+            specifiedPackages.add(packageDoc.name());
+        }
+    }
 
     @Override
     public List<RenderContext> process(ClassDoc classDoc) {
@@ -42,7 +49,7 @@ public class FieldProcessorImpl implements FieldProcessor {
 
                 } else {
                     String packageName = (type.getPackage() != null) ? type.getPackage().getName() : null;
-                    if ((packageName != null) && !packageName.startsWith("java.")) {
+                    if ((packageName != null) && isSpecifiedPackage(packageName)) {
                         ClassDoc fieldClassDoc = classDoc.findClass(fieldDoc.type().qualifiedTypeName());
                         field.put("child", process(fieldClassDoc));
                         field.put("type", "Object");
@@ -55,5 +62,14 @@ public class FieldProcessorImpl implements FieldProcessor {
         }
 
         return result;
+    }
+
+    private boolean isSpecifiedPackage(String packageName) {
+        for (String specifiedPackage : specifiedPackages) {
+            if (packageName.startsWith(specifiedPackage)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

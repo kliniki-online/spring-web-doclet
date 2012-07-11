@@ -1,9 +1,6 @@
 package ru.hts.springwebdoclet.processors.impl;
 
-import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.MethodDoc;
-import com.sun.javadoc.Tag;
-import com.sun.javadoc.ThrowsTag;
+import com.sun.javadoc.*;
 import org.apache.commons.lang3.StringUtils;
 import ru.hts.springwebdoclet.processors.ThrowsProcessor;
 import ru.hts.springwebdoclet.render.RenderContext;
@@ -16,6 +13,10 @@ import java.util.List;
  * @author Ivan Sungurov
  */
 public class ThrowsProcessorImpl implements ThrowsProcessor {
+    @Override
+    public void init(RootDoc rootDoc) {
+    }
+
     @Override
     public List<RenderContext> process(ClassDoc classDoc, MethodDoc methodDoc) {
         List<RenderContext> result = new ArrayList<RenderContext>();

@@ -2,6 +2,7 @@ package ru.hts.springwebdoclet.processors.impl;
 
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.MethodDoc;
+import com.sun.javadoc.RootDoc;
 import ru.hts.springwebdoclet.MethodContextComparator;
 import ru.hts.springwebdoclet.processors.ControllerProcessor;
 import ru.hts.springwebdoclet.processors.MethodProcessor;
@@ -17,6 +18,11 @@ import java.util.List;
  */
 public class ControllerProcessorImpl implements ControllerProcessor {
     private MethodProcessor methodProcessor;
+
+    @Override
+    public void init(RootDoc rootDoc) {
+        methodProcessor.init(rootDoc);
+    }
 
     @Override
     public RenderContext process(ClassDoc classDoc) {

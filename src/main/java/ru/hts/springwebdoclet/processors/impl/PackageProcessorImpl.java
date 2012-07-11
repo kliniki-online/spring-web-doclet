@@ -2,6 +2,7 @@ package ru.hts.springwebdoclet.processors.impl;
 
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.PackageDoc;
+import com.sun.javadoc.RootDoc;
 import org.springframework.stereotype.Controller;
 import ru.hts.springwebdoclet.JavadocUtils;
 import ru.hts.springwebdoclet.processors.ControllerProcessor;
@@ -17,6 +18,11 @@ public class PackageProcessorImpl implements PackageProcessor {
     private static final String CONTROLLER_CLASS = Controller.class.getCanonicalName();
 
     private ControllerProcessor controllerProcessor;
+
+    @Override
+    public void init(RootDoc rootDoc) {
+        controllerProcessor.init(rootDoc);
+    }
 
     @Override
     public RenderContext process(PackageDoc packageDoc) {

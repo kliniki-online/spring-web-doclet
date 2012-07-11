@@ -66,6 +66,8 @@ public class SpringWebDoclet {
     public boolean process(RootDoc root) {
         List<RenderContext> packageContextList = new ArrayList<RenderContext>();
 
+        packageProcessor.init(root);
+
         for (PackageDoc packageDoc : root.specifiedPackages()) {
             RenderContext packageContext = packageProcessor.process(packageDoc);
             if (packageContext != null) {

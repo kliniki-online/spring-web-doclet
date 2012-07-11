@@ -1,9 +1,6 @@
 package ru.hts.springwebdoclet.processors.impl;
 
-import com.sun.javadoc.MethodDoc;
-import com.sun.javadoc.ParamTag;
-import com.sun.javadoc.Parameter;
-import com.sun.javadoc.Tag;
+import com.sun.javadoc.*;
 import ru.hts.springwebdoclet.JavadocUtils;
 import ru.hts.springwebdoclet.processors.AnnotationProcessor;
 import ru.hts.springwebdoclet.processors.ParameterProcessor;
@@ -21,6 +18,10 @@ import java.util.Map;
 public class ParameterProcessorImpl implements ParameterProcessor {
 
     private AnnotationProcessor annotationProcessor;
+
+    @Override
+    public void init(RootDoc rootDoc) {
+    }
 
     @Override
     public List<RenderContext> process(MethodDoc methodDoc) {

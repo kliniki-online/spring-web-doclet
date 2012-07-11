@@ -3,6 +3,7 @@ package ru.hts.springwebdoclet.processors.impl;
 import com.sun.javadoc.AnnotationDesc;
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.MethodDoc;
+import com.sun.javadoc.RootDoc;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.hts.springwebdoclet.processors.*;
 import ru.hts.springwebdoclet.render.RenderContext;
@@ -21,6 +22,11 @@ public class MethodProcessorImpl implements MethodProcessor {
     private AnnotationProcessor annotationProcessor;
     private ReturnProcessor returnProcessor;
     private ThrowsProcessor throwsProcessor;
+
+    @Override
+    public void init(RootDoc rootDoc) {
+        returnProcessor.init(rootDoc);
+    }
 
     @Override
     public RenderContext process(ClassDoc classDoc, MethodDoc methodDoc) {

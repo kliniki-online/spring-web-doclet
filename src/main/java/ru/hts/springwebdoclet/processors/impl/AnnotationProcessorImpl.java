@@ -1,6 +1,7 @@
 package ru.hts.springwebdoclet.processors.impl;
 
 import com.sun.javadoc.AnnotationDesc;
+import com.sun.javadoc.RootDoc;
 import ru.hts.springwebdoclet.annotation.AnnotationHandler;
 import ru.hts.springwebdoclet.processors.AnnotationProcessor;
 import ru.hts.springwebdoclet.render.RenderContext;
@@ -18,6 +19,10 @@ import static ru.hts.springwebdoclet.ReflectionUtils.getRequiredClass;
  */
 public class AnnotationProcessorImpl implements AnnotationProcessor {
     private Map<Class, AnnotationHandler> handlerMap = new HashMap<Class, AnnotationHandler>();
+
+    @Override
+    public void init(RootDoc rootDoc) {
+    }
 
     @Override
     public RenderContext process(AnnotationDesc[] annotations) {
