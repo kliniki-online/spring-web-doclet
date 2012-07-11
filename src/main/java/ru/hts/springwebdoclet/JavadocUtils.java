@@ -16,7 +16,7 @@ public class JavadocUtils {
         String typeName;
         Class classType = ReflectionUtils.getOptionalClass(type.qualifiedTypeName());
 
-        if (type.isPrimitive()) {
+        if ((classType != null) && type.isPrimitive()) {
             typeName = ClassUtils.primitiveToWrapper(classType).getSimpleName();
         } else {
             typeName = type.simpleTypeName();
