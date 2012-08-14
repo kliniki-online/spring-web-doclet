@@ -7,7 +7,15 @@
     <a href="${indexPath}">Контроллеры</a>
     <a href="${urlmapPath}">Карта URL'ов</a>
 </nav>
+
 <h2>${controller['title']} (${controller['name']})</h2>
+
+<div class="toc">
+    [@filtermethods controller 'GET'/]
+    [@filtermethods controller 'POST'/]
+</div>
+<div class="clear"></div>
+
 <ul>
     [#list controller['methods'] as method]
         <li>
@@ -82,6 +90,19 @@
 </ul>
 [/#assign]
 
+
+[#macro filtermethods controller methodtype]
+    <h3>${methodtype}</h3>
+    <ul>
+        [#list controller['methods'] as method]
+            [#if method['method'] == methodtype]
+                <li>
+                    <a href="#${method['anchor']}">${method['url']}</a>
+                </li>
+            [/#if]
+        [/#list]
+    </ul>
+[/#macro]
 
 [#macro indent char count]
     [#if count != 0][#list 0..count as x]${char}[/#list][/#if]
