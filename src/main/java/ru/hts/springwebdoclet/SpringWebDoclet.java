@@ -15,6 +15,7 @@ import ru.hts.springwebdoclet.render.RenderContext;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Javadoc Doclet which allows to collect information about Spring Web controllers
@@ -39,6 +40,8 @@ public class SpringWebDoclet {
                 renderer.setStylesheetFile(optValue);
             } else if ("-docencoding".equals(optName)) {
                 renderer.setOutputEncoding(optValue);
+            } else if ("-lang".equals(optName)) {
+                renderer.setLocale(new Locale(optValue));
             }
         }
 
@@ -111,6 +114,7 @@ public class SpringWebDoclet {
         if ("-d".equals(option) ||
                 "-windowtitle".equals(option) ||
                 "-stylesheetfile".equals(option) ||
+                "-lang".equals(option) ||
                 "-docencoding".equals(option)) {
             return 2;
         } else {

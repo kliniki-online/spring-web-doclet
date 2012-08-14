@@ -121,6 +121,10 @@ Additional parameters
         <td>-docencoding <encoding></td>
         <td>sets output documentation encoding</td>
     </tr>
+    <tr>
+        <td>-lang <language></td>
+        <td>sets template language (two-letter code)</td>
+    </tr>
 </table>
 
 Example
@@ -141,8 +145,8 @@ Example
                     <docletArtifacts>
                         <docletArtifact>
                             <groupId>ru.kliniki-online</groupId>
-                            <artifactId>spring-doclet</artifactId>
-                            <version>0.1</version>
+                            <artifactId>spring-web-doclet</artifactId>
+                            <version>0.1.4</version>
                         </docletArtifact>
                     </docletArtifacts>
 
@@ -152,6 +156,7 @@ Example
                     <additionalparam>
                         -stylesheetfile style.css
                         -windowtitle "Web API"
+                        -lang ru
                     </additionalparam>
                 </configuration>
             </plugin>

@@ -1,12 +1,12 @@
 [#ftl]
 
-[#assign title]Карта URL'ов[/#assign]
+[#assign title]${i18n.getText('nav.urlmap')}[/#assign]
 
 [#assign content]
 <nav>
-    <a href="${indexPath}">Контроллеры</a>
+    <a href="${indexPath}">${i18n.getText('nav.controllers')}</a>
 </nav>
-<h2>Карта URL'ов</h2>
+<h2>${i18n.getText('nav.urlmap')}</h2>
 <ul class="url-list">
     [#list methods as method]
         <li>

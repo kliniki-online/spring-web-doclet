@@ -4,8 +4,8 @@
 
 [#assign content]
 <nav>
-    <a href="${indexPath}">Контроллеры</a>
-    <a href="${urlmapPath}">Карта URL'ов</a>
+    <a href="${indexPath}">${i18n.getText('nav.controllers')}</a>
+    <a href="${urlmapPath}">${i18n.getText('nav.urlmap')}</a>
 </nav>
 
 <h2>${controller['title']} (${controller['name']})</h2>
@@ -24,7 +24,7 @@
             <p>${method['description']}</p>
 
             [#if method['roles']?? && (method['roles']?size != 0)]
-                <h4>Права доступа</h4>
+                <h4>${i18n.getText('controller.allowed.roles')}</h4>
                 <ul class="roles">
                     [#list method['roles'] as role]
                         <li>${role}</li>
@@ -33,13 +33,13 @@
             [/#if]
 
             [#if method['parameters']?size != 0]
-                <h4>Вход</h4>
+                <h4>${i18n.getText('controller.input')}</h4>
                 <table class="parameters">
                     <tr>
-                        <th>Параметр</th>
-                        <th>Тип</th>
-                        <th>Обязат.</th>
-                        <th>Описание</th>
+                        <th>${i18n.getText('common.parameter')}</th>
+                        <th>${i18n.getText('common.type')}</th>
+                        <th>${i18n.getText('common.required')}</th>
+                        <th>${i18n.getText('common.description')}</th>
                     </tr>
                     [#list method['parameters'] as param]
                         <tr>
@@ -53,29 +53,29 @@
             [/#if]
 
             [#if method['return']??]
-                <h4>Выход</h4>
+                <h4>${i18n.getText('controller.output')}</h4>
 
                 <p>${method['return']}</p>
             [/#if]
 
             [#if method['returnFields']?? && (method['returnFields']?size != 0)]
-                <h4>Выход</h4>
+                <h4>${i18n.getText('controller.output')}</h4>
                 <table class="return">
                     <tr>
-                        <th>Параметр</th>
-                        <th>Тип</th>
-                        <th>Описание</th>
+                        <th>${i18n.getText('common.parameter')}</th>
+                        <th>${i18n.getText('common.type')}</th>
+                        <th>${i18n.getText('common.description')}</th>
                     </tr>
                     [@listparams method['returnFields']/]
                 </table>
             [/#if]
 
             [#if method['exceptions']?size != 0]
-                <h4>Ошибки</h4>
+                <h4>${i18n.getText('controller.exceptions')}</h4>
                 <table class="exceptions">
                     <tr>
-                        <th>Тип</th>
-                        <th>Описание</th>
+                        <th>${i18n.getText('common.type')}</th>
+                        <th>${i18n.getText('common.description')}</th>
                     </tr>
                     [#list method['exceptions'] as ex]
                         <tr>

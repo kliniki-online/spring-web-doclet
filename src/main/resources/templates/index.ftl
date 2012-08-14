@@ -1,10 +1,10 @@
 [#ftl]
 
-[#assign title]Контроллеры[/#assign]
+[#assign title]${i18n.getText('nav.controllers')}[/#assign]
 
 [#assign content]
 <nav>
-    <a href="${urlmapPath}">Карта URL'ов</a>
+    <a href="${urlmapPath}">${i18n.getText('nav.urlmap')}</a>
 </nav>
     [#list packages as package]
     <h2 class="package">${package['overview']} (${package['name']})</h2>

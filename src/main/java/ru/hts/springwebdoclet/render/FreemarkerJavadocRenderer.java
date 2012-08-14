@@ -5,30 +5,32 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfig;
 import ru.hts.springwebdoclet.MethodContextComparator;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Renders collected information about web API using FreeMarker templates
  * @author Ivan Sungurov
  */
-@Component
 public class FreemarkerJavadocRenderer implements JavadocRenderer {
     private static final String STYLESHEET_TARGET_FILE = "style.css";
     private static final String INDEX_FILE = "index.html";
     private static final String URLMAP_FILE = "urlmap.html";
+
+    private MessageSource messageSource;
 
     private String template = "base.ftl";
     private String outputDir = "webapi";
     private String windowTitle = "Web API";
     private String stylesheetFile;
     private String outputEncoding = "UTF-8";
+    private Locale locale = Locale.ENGLISH;
 
     @Override
     public boolean render(List<RenderContext> packages) throws IOException {
@@ -100,6 +102,7 @@ public class FreemarkerJavadocRenderer implements JavadocRenderer {
         context.put("indexPath", baseDir + INDEX_FILE);
         context.put("urlmapPath", baseDir + URLMAP_FILE);
         context.put("charset", config.getOutputEncoding());
+        context.put("i18n", new MessageProvider(messageSource, locale));
         if (stylesheetFile != null) {
             context.put("stylesheet", baseDir + STYLESHEET_TARGET_FILE);
         }
@@ -140,5 +143,13 @@ public class FreemarkerJavadocRenderer implements JavadocRenderer {
 
     public void setOutputEncoding(String outputEncoding) {
         this.outputEncoding = outputEncoding;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
+
+    public void setMessageSource(MessageSource messageSource) {
+        this.messageSource = messageSource;
     }
 }
