@@ -11,8 +11,16 @@
 <h2>${controller['title']} (${controller['name']})</h2>
 
 <div class="toc">
-    [@filtermethods controller 'GET'/]
-    [@filtermethods controller 'POST'/]
+    [#list controller['requestMethods']?keys?sort as requestMethod]
+    <h3>${requestMethod}</h3>
+    <ul>
+        [#list controller['requestMethods'][requestMethod] as method]
+        <li>
+            <a href="#${method['anchor']}">${method['url']}</a>
+        </li>
+        [/#list]
+    </ul>
+    [/#list]
 </div>
 <div class="clear"></div>
 
@@ -90,19 +98,6 @@
 </ul>
 [/#assign]
 
-
-[#macro filtermethods controller methodtype]
-    <h3>${methodtype}</h3>
-    <ul>
-        [#list controller['methods'] as method]
-            [#if method['method'] == methodtype]
-                <li>
-                    <a href="#${method['anchor']}">${method['url']}</a>
-                </li>
-            [/#if]
-        [/#list]
-    </ul>
-[/#macro]
 
 [#macro indent char count]
     [#if count != 0][#list 0..count as x]${char}[/#list][/#if]

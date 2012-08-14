@@ -10,6 +10,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfig;
 import ru.hts.springwebdoclet.MethodContextComparator;
+import ru.hts.springwebdoclet.util.MultiMap;
 
 import java.io.*;
 import java.util.*;
@@ -65,11 +66,16 @@ public class FreemarkerJavadocRenderer implements JavadocRenderer {
                     String link = subDir + '/' + name + ".html";
                     controllerContext.put("link", link);
 
+                    MultiMap<String, RenderContext> requestMethodMap = new MultiMap<String, RenderContext>();
+
                     for (RenderContext methodContext : (List<RenderContext>) controllerContext.get("methods")) {
                         methodContext.put("controllerLink", link);
                         methodContext.put("anchor", methodContext.get("method") + ":" + methodContext.get("url"));
                         methodList.add(methodContext);
+                        requestMethodMap.putItem((String) methodContext.get("method"), methodContext);
                     }
+
+                    controllerContext.put("requestMethods", requestMethodMap);
 
                     RenderContext controllerPageContext = createBaseContext(config, basePath.toString());
                     controllerPageContext.put("controller", controllerContext);
