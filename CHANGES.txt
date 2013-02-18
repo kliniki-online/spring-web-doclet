@@ -1,3 +1,7 @@
+version 0.1.5
+========================================
+* fixed aggregated objects processing
+
 version 0.1.4
 ========================================
 * added TOC for controller methods

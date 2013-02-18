@@ -36,24 +36,26 @@ public class FieldProcessorImpl implements FieldProcessor {
             field.put("description", fieldDoc.commentText());
             field.put("type", JavadocUtils.formatTypeName(fieldDoc.type()));
 
-            Class type = ReflectionUtils.getOptionalClass(fieldDoc.type().qualifiedTypeName());
+            Class fieldClass = ReflectionUtils.getOptionalClass(fieldDoc.type().qualifiedTypeName());
 
-            if (type != null) {
-                if (Collection.class.isAssignableFrom(type)) {
-                    Type[] collectionType = fieldDoc.type().asParameterizedType().typeArguments();
-                    if (collectionType.length != 0) {
-                        ClassDoc collectionClassDoc = classDoc.findClass(collectionType[0].qualifiedTypeName());
-                        field.put("child", process(collectionClassDoc));
-                        field.put("type", "List");
+            if ((fieldClass != null) && (Collection.class.isAssignableFrom(fieldClass))) {
+                Type[] collectionTypes = fieldDoc.type().asParameterizedType().typeArguments();
+                if (collectionTypes.length != 0) {
+                    Type collectionType = collectionTypes[0];
+                    if (shouldBeProcessed(collectionType)) {
+                        ClassDoc collectionClassDoc = classDoc.findClass(collectionType.qualifiedTypeName());
+                        if (!classDoc.equals(collectionClassDoc)) {
+                            field.put("child", process(collectionClassDoc));
+                            field.put("type", "List");
+                        }
                     }
-
-                } else {
-                    String packageName = (type.getPackage() != null) ? type.getPackage().getName() : null;
-                    if ((packageName != null) && isSpecifiedPackage(packageName)) {
-                        ClassDoc fieldClassDoc = classDoc.findClass(fieldDoc.type().qualifiedTypeName());
+                }
+            } else {
+                if (shouldBeProcessed(fieldDoc.type())) {
+                    ClassDoc fieldClassDoc = classDoc.findClass(fieldDoc.type().qualifiedTypeName());
+                    if (!classDoc.equals(fieldClassDoc)) {
                         field.put("child", process(fieldClassDoc));
                         field.put("type", "Object");
-
                     }
                 }
             }
@@ -62,6 +64,16 @@ public class FieldProcessorImpl implements FieldProcessor {
         }
 
         return result;
+    }
+
+    private boolean shouldBeProcessed(Type type) {
+        int lastDotIndex = type.qualifiedTypeName().lastIndexOf('.');
+        if (lastDotIndex == -1) {
+            return false;
+        }
+
+        String packageName = type.qualifiedTypeName().substring(0, lastDotIndex);
+        return isSpecifiedPackage(packageName);
     }
 
     private boolean isSpecifiedPackage(String packageName) {
