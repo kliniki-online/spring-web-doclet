@@ -3,9 +3,12 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <bean id="config" class="ru.hts.springwebdoclet.Config"/>
+
     <bean id="springWebDoclet" class="ru.hts.springwebdoclet.SpringWebDoclet">
         <property name="packageProcessor" ref="packageProcessor"/>
         <property name="renderer" ref="renderer"/>
+        <property name="config" ref="config"/>
     </bean>
 
     <bean id="packageProcessor" class="ru.hts.springwebdoclet.processors.impl.PackageProcessorImpl">
@@ -24,7 +27,7 @@
     </bean>
 
     <bean id="returnProcessor" class="ru.hts.springwebdoclet.processors.impl.ReturnProcessorImpl">
-        <property name="fieldProcessor" ref="returnClassFieldProcessor"/>
+        <property name="fieldProcessor" ref="fieldProcessor"/>
         <property name="ignoreTypes">
             <list>
                 <value>java.lang.String</value>
@@ -34,15 +37,20 @@
         </property>
     </bean>
 
-    <bean id="returnClassFieldProcessor" class="ru.hts.springwebdoclet.processors.impl.FieldProcessorImpl"/>
+    <bean id="fieldProcessor" class="ru.hts.springwebdoclet.processors.impl.FieldProcessorImpl">
+        <property name="config" ref="config"/>
+        <property name="annotationProcessor">
+            <bean class="ru.hts.springwebdoclet.processors.impl.AnnotationProcessorImpl"/>
+        </property>
+    </bean>
 
     <bean id="throwsProcessor" class="ru.hts.springwebdoclet.processors.impl.ThrowsProcessorImpl"/>
 
     <bean id="methodAnnotationProcessor" class="ru.hts.springwebdoclet.processors.impl.AnnotationProcessorImpl">
         <property name="annotationHandlers">
             <list>
-                <bean class="ru.hts.springwebdoclet.annotation.RequestMappingAnnotationHandler"/>
-                <bean class="ru.hts.springwebdoclet.annotation.RolesAllowedAnnotationHandler"/>
+                <bean class="ru.hts.springwebdoclet.annotation.method.RequestMappingAnnotationHandler"/>
+                <bean class="ru.hts.springwebdoclet.annotation.method.RolesAllowedAnnotationHandler"/>
             </list>
         </property>
     </bean>
@@ -54,8 +62,25 @@
     <bean id="parameterAnnotationProcessor" class="ru.hts.springwebdoclet.processors.impl.AnnotationProcessorImpl">
         <property name="annotationHandlers">
             <list>
-                <bean class="ru.hts.springwebdoclet.annotation.RequestParamAnnotationHandler"/>
-                <bean class="ru.hts.springwebdoclet.annotation.PathVariableAnnotationHandler"/>
+                <bean class="ru.hts.springwebdoclet.annotation.parameter.RequestParamAnnotationHandler"/>
+                <bean class="ru.hts.springwebdoclet.annotation.parameter.PathVariableAnnotationHandler"/>
+                <bean class="ru.hts.springwebdoclet.annotation.parameter.RequestBodyAnnotationHandler">
+                    <property name="fieldProcessor">
+                        <bean class="ru.hts.springwebdoclet.processors.impl.FieldProcessorImpl">
+                            <property name="config" ref="config"/>
+                            <property name="annotationProcessor">
+                                <bean class="ru.hts.springwebdoclet.processors.impl.AnnotationProcessorImpl">
+                                    <property name="annotationHandlers">
+                                        <list>
+                                            <bean class="ru.hts.springwebdoclet.annotation.field.NotNullAnnotationHandler"/>
+                                            <bean class="ru.hts.springwebdoclet.annotation.field.NotBlankAnnotationHandler"/>
+                                        </list>
+                                    </property>
+                                </bean>
+                            </property>
+                        </bean>
+                    </property>
+                </bean>
             </list>
         </property>
     </bean>

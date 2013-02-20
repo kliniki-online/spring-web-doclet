@@ -1,7 +1,6 @@
 package ru.hts.springwebdoclet.processors.impl;
 
 import com.sun.javadoc.AnnotationDesc;
-import com.sun.javadoc.RootDoc;
 import ru.hts.springwebdoclet.annotation.AnnotationHandler;
 import ru.hts.springwebdoclet.processors.AnnotationProcessor;
 import ru.hts.springwebdoclet.render.RenderContext;
@@ -17,23 +16,25 @@ import static ru.hts.springwebdoclet.ReflectionUtils.getRequiredClass;
  * Processes annotations
  * @author Ivan Sungurov
  */
-public class AnnotationProcessorImpl implements AnnotationProcessor {
+public class AnnotationProcessorImpl<T> implements AnnotationProcessor<T> {
     private Map<Class, AnnotationHandler> handlerMap = new HashMap<Class, AnnotationHandler>();
 
     @Override
-    public void init(RootDoc rootDoc) {
-    }
-
-    @Override
-    public RenderContext process(AnnotationDesc[] annotations) {
+    public RenderContext process(AnnotationDesc[] annotations, T target) {
         RenderContext result = new RenderContext();
 
         for (AnnotationDesc annotationDoc : annotations) {
-            Class annotationType = getRequiredClass(annotationDoc.annotationType().qualifiedTypeName());
+            Class annotationType;
+            try {
+                annotationType = getRequiredClass(annotationDoc.annotationType().qualifiedTypeName());
+            } catch (ClassCastException e) {
+                System.err.println("Skipped " + annotationDoc + "annotation");
+                continue;
+            }
 
             AnnotationHandler handler = handlerMap.get(annotationType);
             if (handler != null) {
-                Map<String, Object> values = handler.handle(annotationDoc);
+                Map<String, Object> values = handler.handle(annotationDoc, target);
                 result.putAll(values);
             }
         }

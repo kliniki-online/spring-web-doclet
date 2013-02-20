@@ -1,16 +1,18 @@
-package ru.hts.springwebdoclet.annotation;
+package ru.hts.springwebdoclet.annotation.parameter;
 
 import com.sun.javadoc.AnnotationDesc;
+import com.sun.javadoc.Parameter;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.hts.springwebdoclet.annotation.AnnotationHandler;
 import ru.hts.springwebdoclet.render.RenderContext;
 
 /**
  * Processes <code>@RequestParam</code> annotation
  * @author Ivan Sungurov
  */
-public class RequestParamAnnotationHandler implements AnnotationHandler {
+public class RequestParamAnnotationHandler implements AnnotationHandler<Parameter> {
     @Override
-    public RenderContext handle(AnnotationDesc annotationDoc) {
+    public RenderContext handle(AnnotationDesc annotationDoc, Parameter parameter) {
         RenderContext result = new RenderContext();
         result.put("required", true);
 

@@ -1,8 +1,13 @@
 package ru.hts.springwebdoclet.processors.impl;
 
-import com.sun.javadoc.*;
+import com.sun.javadoc.ClassDoc;
+import com.sun.javadoc.FieldDoc;
+import com.sun.javadoc.PackageDoc;
+import com.sun.javadoc.Type;
+import ru.hts.springwebdoclet.Config;
 import ru.hts.springwebdoclet.JavadocUtils;
 import ru.hts.springwebdoclet.ReflectionUtils;
+import ru.hts.springwebdoclet.processors.AnnotationProcessor;
 import ru.hts.springwebdoclet.processors.FieldProcessor;
 import ru.hts.springwebdoclet.render.RenderContext;
 
@@ -16,14 +21,8 @@ import java.util.List;
  */
 public class FieldProcessorImpl implements FieldProcessor {
 
-    private List<String> specifiedPackages = new ArrayList<String>();
-
-    @Override
-    public void init(RootDoc rootDoc) {
-        for (PackageDoc packageDoc : rootDoc.specifiedPackages()) {
-            specifiedPackages.add(packageDoc.name());
-        }
-    }
+    private Config config;
+    private AnnotationProcessor<FieldDoc> annotationProcessor;
 
     @Override
     public List<RenderContext> process(ClassDoc classDoc) {
@@ -60,6 +59,8 @@ public class FieldProcessorImpl implements FieldProcessor {
                 }
             }
 
+            field.putAll(annotationProcessor.process(fieldDoc.annotations(), fieldDoc));
+
             result.add(field);
         }
 
@@ -77,11 +78,19 @@ public class FieldProcessorImpl implements FieldProcessor {
     }
 
     private boolean isSpecifiedPackage(String packageName) {
-        for (String specifiedPackage : specifiedPackages) {
-            if (packageName.startsWith(specifiedPackage)) {
+        for (PackageDoc specifiedPackage : config.getSpecifiedPackages()) {
+            if (packageName.startsWith(specifiedPackage.name())) {
                 return true;
             }
         }
         return false;
+    }
+
+    public void setConfig(Config config) {
+        this.config = config;
+    }
+
+    public void setAnnotationProcessor(AnnotationProcessor<FieldDoc> annotationProcessor) {
+        this.annotationProcessor = annotationProcessor;
     }
 }

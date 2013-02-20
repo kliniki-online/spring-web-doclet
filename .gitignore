@@ -1,5 +1,6 @@
 /target/
 /webapi/
+/.idea/
 *.iws
 *.iml
 *.ipr

@@ -7,8 +7,8 @@ import ru.hts.springwebdoclet.render.RenderContext;
  * Processes specific annotation
  * @author Ivan Sungurov
  */
-public interface AnnotationHandler {
-    RenderContext handle(AnnotationDesc annotationDoc);
+public interface AnnotationHandler<T> {
+    RenderContext handle(AnnotationDesc annotationDoc, T target);
 
     Class getSupportedAnnotation();
 }

@@ -52,6 +52,39 @@ public class ArticleController {
 
     /* ... */
 
+    // ========================================================================
+
+    /**
+     * Creates a new article
+     */
+    @ResponseBody
+    @RequestMapping(value = "/article", method = RequestMethod.POST)
+    public GetArticlesResponse createArticle(
+            @RequestBody @Valid CreateArticleRequest request
+    ) {
+        /* ... */
+
+        return new CreateArticleResponse();
+    }
+
+    public static class CreateArticleRequest {
+        /** article title */
+        @NotEmpty
+        public String title;
+
+        /** article author */
+        public String author;
+
+        /** article content */
+        public String text;
+    }
+
+    public static class CreateArticleResponse {
+        public String success = true;
+    }
+
+    // ========================================================================
+
     /**
      * Returns article list
      * @param page  page number
@@ -92,6 +125,8 @@ public class ArticleController {
         /** total articles count */
         public Long totalRecords;
     }
+
+    // ========================================================================
 
     /* ... */
 }

@@ -1,6 +1,7 @@
 version 0.1.5
 ========================================
 * fixed aggregated objects processing
+* added support for @RequestBody annotation and validation API
 
 version 0.1.4
 ========================================

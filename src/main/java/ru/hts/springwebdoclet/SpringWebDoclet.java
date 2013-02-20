@@ -14,6 +14,7 @@ import ru.hts.springwebdoclet.render.RenderContext;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -27,8 +28,10 @@ public class SpringWebDoclet {
 
     private PackageProcessor packageProcessor;
 
-    public void configure(String[][] options) {
-        for (String[] opt : options) {
+    private Config config;
+
+    public void configure(RootDoc root) {
+        for (String[] opt : root.options()) {
             String optName = opt[0];
             String optValue = opt.length > 1 ? opt[1] : null;
 
@@ -48,6 +51,8 @@ public class SpringWebDoclet {
         if (renderer.getStylesheetFile() == null) {
             renderer.setStylesheetFile(getDefaultStylesheetFile());
         }
+
+        config.setSpecifiedPackages(Arrays.asList(root.specifiedPackages()));
     }
 
     private String getDefaultStylesheetFile() {
@@ -68,8 +73,6 @@ public class SpringWebDoclet {
 
     public boolean process(RootDoc root) {
         List<RenderContext> packageContextList = new ArrayList<RenderContext>();
-
-        packageProcessor.init(root);
 
         for (PackageDoc packageDoc : root.specifiedPackages()) {
             RenderContext packageContext = packageProcessor.process(packageDoc);
@@ -102,7 +105,7 @@ public class SpringWebDoclet {
         }
 
         SpringWebDoclet doclet = (SpringWebDoclet) appContext.getBean("springWebDoclet");
-        doclet.configure(root.options());
+        doclet.configure(root);
         return doclet.process(root);
     }
 
@@ -132,5 +135,9 @@ public class SpringWebDoclet {
 
     public void setPackageProcessor(PackageProcessor packageProcessor) {
         this.packageProcessor = packageProcessor;
+    }
+
+    public void setConfig(Config config) {
+        this.config = config;
     }
 }

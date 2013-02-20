@@ -1,7 +1,8 @@
-package ru.hts.springwebdoclet.annotation;
+package ru.hts.springwebdoclet.annotation.method;
 
 import com.sun.javadoc.AnnotationDesc;
 import com.sun.javadoc.AnnotationValue;
+import ru.hts.springwebdoclet.annotation.AnnotationHandler;
 import ru.hts.springwebdoclet.render.RenderContext;
 
 import javax.annotation.security.RolesAllowed;
@@ -14,7 +15,7 @@ import java.util.List;
  */
 public class RolesAllowedAnnotationHandler implements AnnotationHandler {
     @Override
-    public RenderContext handle(AnnotationDesc annotationDoc) {
+    public RenderContext handle(AnnotationDesc annotationDoc, Object target) {
         RenderContext context = new RenderContext();
 
         List<String> roles = new ArrayList<String>();

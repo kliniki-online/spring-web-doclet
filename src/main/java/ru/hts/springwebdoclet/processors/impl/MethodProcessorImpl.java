@@ -3,7 +3,6 @@ package ru.hts.springwebdoclet.processors.impl;
 import com.sun.javadoc.AnnotationDesc;
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.MethodDoc;
-import com.sun.javadoc.RootDoc;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.hts.springwebdoclet.processors.*;
 import ru.hts.springwebdoclet.render.RenderContext;
@@ -19,14 +18,9 @@ public class MethodProcessorImpl implements MethodProcessor {
     private static final String REQUEST_MAPPING_CLASS_NAME = RequestMapping.class.getCanonicalName();
 
     private ParameterProcessor parameterProcessor;
-    private AnnotationProcessor annotationProcessor;
+    private AnnotationProcessor<MethodDoc> annotationProcessor;
     private ReturnProcessor returnProcessor;
     private ThrowsProcessor throwsProcessor;
-
-    @Override
-    public void init(RootDoc rootDoc) {
-        returnProcessor.init(rootDoc);
-    }
 
     @Override
     public RenderContext process(ClassDoc classDoc, MethodDoc methodDoc) {
@@ -50,7 +44,7 @@ public class MethodProcessorImpl implements MethodProcessor {
             return null;
         }
 
-        result.putAll(annotationProcessor.process(annotations.toArray(new AnnotationDesc[0])));
+        result.putAll(annotationProcessor.process(annotations.toArray(new AnnotationDesc[0]), methodDoc));
         result.putAll(returnProcessor.process(classDoc, methodDoc));
         result.put("parameters", parameterProcessor.process(methodDoc));
         result.put("exceptions", throwsProcessor.process(classDoc, methodDoc));

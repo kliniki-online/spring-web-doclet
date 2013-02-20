@@ -12,14 +12,14 @@
 
 <div class="toc">
     [#list controller['requestMethods']?keys?sort as requestMethod]
-    <h3>${requestMethod}</h3>
-    <ul>
-        [#list controller['requestMethods'][requestMethod] as method]
-        <li>
-            <a href="#${method['anchor']}">${method['url']}</a>
-        </li>
-        [/#list]
-    </ul>
+        <h3>${requestMethod}</h3>
+        <ul>
+            [#list controller['requestMethods'][requestMethod] as method]
+                <li>
+                    <a href="#${method['anchor']}">${method['url']}</a>
+                </li>
+            [/#list]
+        </ul>
     [/#list]
 </div>
 <div class="clear"></div>
@@ -40,7 +40,12 @@
                 </ul>
             [/#if]
 
-            [#if method['parameters']?size != 0]
+            [#if method['parameters']['list']?size != 0]
+                [#if method['method'] == 'POST']
+                    <h4>${i18n.getText('controller.input.type')}</h4>
+
+                    <p>${method['parameters']['type']}</p>
+                [/#if]
                 <h4>${i18n.getText('controller.input')}</h4>
                 <table class="parameters">
                     <tr>
@@ -49,7 +54,7 @@
                         <th>${i18n.getText('common.required')}</th>
                         <th>${i18n.getText('common.description')}</th>
                     </tr>
-                    [#list method['parameters'] as param]
+                    [#list method['parameters']['list'] as param]
                         <tr>
                             <td class="col-param">${param['name']!''}</td>
                             <td class="col-type">${param['type']?html}</td>

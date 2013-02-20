@@ -2,7 +2,6 @@ package ru.hts.springwebdoclet.processors.impl;
 
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.MethodDoc;
-import com.sun.javadoc.RootDoc;
 import com.sun.javadoc.Tag;
 import ru.hts.springwebdoclet.ReflectionUtils;
 import ru.hts.springwebdoclet.processors.FieldProcessor;
@@ -22,11 +21,6 @@ public class ReturnProcessorImpl implements ReturnProcessor {
 
     private List<Class> ignoreTypes = new ArrayList<Class>();
     private FieldProcessor fieldProcessor;
-
-    @Override
-    public void init(RootDoc rootDoc) {
-        fieldProcessor.init(rootDoc);
-    }
 
     @Override
     public RenderContext process(ClassDoc classDoc, MethodDoc methodDoc) {

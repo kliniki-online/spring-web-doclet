@@ -1,6 +1,9 @@
 package ru.hts.springwebdoclet.processors.impl;
 
-import com.sun.javadoc.*;
+import com.sun.javadoc.MethodDoc;
+import com.sun.javadoc.ParamTag;
+import com.sun.javadoc.Parameter;
+import com.sun.javadoc.Tag;
 import ru.hts.springwebdoclet.JavadocUtils;
 import ru.hts.springwebdoclet.processors.AnnotationProcessor;
 import ru.hts.springwebdoclet.processors.ParameterProcessor;
@@ -17,37 +20,41 @@ import java.util.Map;
  */
 public class ParameterProcessorImpl implements ParameterProcessor {
 
-    private AnnotationProcessor annotationProcessor;
+    private AnnotationProcessor<Parameter> annotationProcessor;
 
     @Override
-    public void init(RootDoc rootDoc) {
-    }
-
-    @Override
-    public List<RenderContext> process(MethodDoc methodDoc) {
+    public RenderContext process(MethodDoc methodDoc) {
         Map<String, String> descriptionMap = new HashMap<String, String>();
         for (Tag tag : methodDoc.tags("param")) {
             ParamTag paramTag = (ParamTag) tag;
             descriptionMap.put(paramTag.parameterName(), paramTag.parameterComment());
         }
 
-        List<RenderContext> result = new ArrayList<RenderContext>();
+        RenderContext result = new RenderContext();
+
+        List<RenderContext> list = new ArrayList<RenderContext>();
+        result.put("type", "form");
 
         for (Parameter paramDoc : methodDoc.parameters()) {
             RenderContext param = new RenderContext();
 
-            param.putAll(annotationProcessor.process(paramDoc.annotations()));
+            param.putAll(annotationProcessor.process(paramDoc.annotations(), paramDoc));
 
-            String name = (String) param.get("name");
-            if (name == null) {
+            if (param.containsKey("body")) {
+                list = (List<RenderContext>) param.get("body");
+                result.put("type", "raw");
+                break;
+            } else if (!param.containsKey("name")) {
                 continue;
             }
 
             param.put("description", descriptionMap.get(paramDoc.name()));
             param.put("type", JavadocUtils.formatTypeName(paramDoc.type()));
 
-            result.add(param);
+            list.add(param);
         }
+
+        result.put("list", list);
 
         return result;
     }
